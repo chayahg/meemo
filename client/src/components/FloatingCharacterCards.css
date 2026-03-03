@@ -1,0 +1,577 @@
+/* ============================================
+   Character Orbit – V9 Individual 3D Positioning
+   No rotating container — characters always face camera.
+   Perspective handles depth (front = big, back = small).
+   Name sits BEHIND each character in real 3D space.
+   ============================================ */
+
+/* ---------- Container ---------- */
+.co {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 580px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 20px;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: visible;
+}
+
+/* ================================================
+   3D Stage – perspective wrapper
+   ================================================ */
+.co__stage {
+  position: relative;
+  perspective: 1000px;
+  perspective-origin: 50% 48%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.co__stage--dimmed {
+  opacity: 0.06;
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+/* ================================================
+   3D Scene — preserve-3d so children live in 3D space
+   ================================================ */
+.co__scene {
+  position: relative;
+  width: 180px;
+  height: 420px;
+  transform-style: preserve-3d;
+}
+
+/* ================================================
+   Each Character — individually positioned via
+   translate3d(x, 0, z). Always faces camera.
+   CSS transition provides the snap animation.
+   ================================================ */
+.co__char {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 180px;
+  margin-left: -90px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+  transform-style: preserve-3d;  /* needed for bgname's translateZ */
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* During snap animation — optional subtle motion indication */
+.co__char--moving {
+  /* transition is already set, this class reserved for extras */
+}
+
+/* ================================================
+   3D Name BEHIND each Character
+   Uses translateZ(-50px) to sit physically behind
+   the character image in 3D space. Perspective
+   makes it appear slightly smaller / further back.
+   ================================================ */
+.co__char-bgname {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateZ(-50px);
+  font-size: 4.2rem;
+  font-weight: 900;
+  color: var(--c);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* Only the front character shows its name behind — dark & bold */
+.co__char--front .co__char-bgname {
+  opacity: 0.8;
+}
+
+/* ---------- Character Image ---------- */
+.co__char-img {
+  width: 180px;
+  height: 260px;
+  object-fit: contain;
+  object-position: bottom center;
+  display: block;
+  pointer-events: none;
+  position: relative;
+  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.4));
+  transition: transform 0.5s ease, filter 0.5s ease, opacity 0.5s ease;
+  transform: scale(0.55);
+  opacity: 0.7;
+}
+
+/* FRONT character: full size + color glow + idle bob */
+.co__char--front .co__char-img {
+  transform: scale(1.15);
+  opacity: 1;
+  filter: drop-shadow(0 16px 45px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 0 50px color-mix(in srgb, var(--c) 35%, transparent));
+  animation: frontIdle 2.8s ease-in-out infinite;
+}
+
+@keyframes frontIdle {
+  0%, 100% { transform: scale(1.15) translateY(0); }
+  30%      { transform: scale(1.15) translateY(-6px); }
+  50%      { transform: scale(1.15) translateY(-3px) rotate(0.4deg); }
+  70%      { transform: scale(1.15) translateY(-7px) rotate(-0.3deg); }
+}
+
+.co__char:hover .co__char-img {
+  filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 0 44px color-mix(in srgb, var(--c) 45%, transparent));
+  transform: scale(0.65);
+  opacity: 0.9;
+}
+
+.co__char--front:hover .co__char-img {
+  transform: scale(1.2);
+  opacity: 1;
+  animation-play-state: paused;
+}
+
+/* ---------- Ground Shadow ---------- */
+.co__ground {
+  width: 380px;
+  height: 55px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.35) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(6px);
+}
+
+/* ================================================
+   Detail Card Overlay
+   ================================================ */
+.co__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: overlayIn 0.4s ease both;
+}
+
+@keyframes overlayIn {
+  from { background: rgba(0, 0, 0, 0); }
+  to   { background: rgba(0, 0, 0, 0.6); }
+}
+
+/* ================================================
+   Detail Card – premium look
+   ================================================ */
+.co__card {
+  position: relative;
+  background: var(--panel-bg, rgba(10, 15, 40, 0.92));
+  border: 1px solid color-mix(in srgb, var(--c) 50%, transparent);
+  border-radius: 30px;
+  padding: 2.2rem 2rem 1.8rem;
+  max-width: 380px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  animation: cardEntry 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes cardEntry {
+  0% {
+    opacity: 0;
+    transform: perspective(800px) rotateX(25deg) scale(0.4) translateY(80px);
+  }
+  50% {
+    opacity: 1;
+    transform: perspective(800px) rotateX(-3deg) scale(1.05) translateY(-10px);
+  }
+  100% {
+    transform: perspective(800px) rotateX(0deg) scale(1) translateY(0);
+  }
+}
+
+/* Spinning ring behind the card */
+.co__card-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 350px;
+  height: 350px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--c) 12%, transparent);
+  pointer-events: none;
+  z-index: -1;
+  animation: ringRotate 12s linear infinite;
+}
+
+.co__card-ring::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--c);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px var(--c), 0 0 30px var(--c);
+}
+
+@keyframes ringRotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Card glow */
+.co__card-glow {
+  position: absolute;
+  inset: -40px;
+  border-radius: 60px;
+  background: radial-gradient(
+    ellipse at 50% 30%,
+    color-mix(in srgb, var(--c) 25%, transparent),
+    transparent 70%
+  );
+  filter: blur(35px);
+  z-index: -1;
+  pointer-events: none;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%      { opacity: 0.6; transform: scale(1.05); }
+}
+
+/* Shimmer line across the card */
+.co__card-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    color-mix(in srgb, var(--c) 8%, transparent) 50%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 2;
+  animation: shimmer 3s 0.8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%   { left: -100%; }
+  40%  { left: 100%; }
+  100% { left: 100%; }
+}
+
+/* Character image in card */
+.co__card-img-wrap {
+  width: 170px;
+  height: 210px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: imgEntrance 0.7s 0.15s cubic-bezier(0.25, 1, 0.5, 1) both,
+             imgFloat 3.5s 1s ease-in-out infinite;
+}
+
+@keyframes imgEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translateY(40px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes imgFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+.co__card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  display: block;
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.3))
+    drop-shadow(0 0 30px color-mix(in srgb, var(--c) 18%, transparent));
+}
+
+/* Card text */
+.co__card-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--c);
+  margin: 0 0 0.3rem;
+  letter-spacing: 0.02em;
+  animation: textSlideIn 0.45s 0.25s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+.co__card-tagline {
+  font-size: 0.88rem;
+  color: var(--text-secondary, #94a3b8);
+  line-height: 1.5;
+  margin: 0 0 0.7rem;
+  animation: textSlideIn 0.45s 0.35s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+@keyframes textSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) translateX(-10px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+    filter: blur(0);
+  }
+}
+
+.co__card-divider {
+  width: 55px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--c), transparent);
+  border-radius: 2px;
+  margin-bottom: 0.7rem;
+  animation: divGrow 0.5s 0.45s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+@keyframes divGrow {
+  from { width: 0; opacity: 0; }
+  to   { width: 55px; opacity: 1; }
+}
+
+/* Typing description */
+.co__card-desc {
+  font-size: 0.86rem;
+  color: var(--text-primary, #e2e8f0);
+  line-height: 1.65;
+  text-align: left;
+  margin: 0;
+  min-height: 3.3em;
+  width: 100%;
+  padding: 0 0.3rem;
+}
+
+.co__card-cursor {
+  color: var(--c);
+  animation: blink 0.65s steps(1) infinite;
+  font-weight: 300;
+  margin-left: 1px;
+}
+
+/* Close button */
+.co__card-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted, #64748b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.co__card-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--text-primary, #f8fafc);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: rotate(90deg);
+}
+
+/* ---------- Shared Keyframes ---------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* ==========================================
+   Responsive
+   ========================================== */
+
+@media (max-width: 968px) {
+  .co {
+    min-height: 520px;
+  }
+
+  .co__stage {
+    perspective: 850px;
+  }
+
+  .co__scene {
+    height: 380px;
+  }
+
+  .co__char-bgname {
+    font-size: 3.5rem;
+  }
+
+  .co__char-img {
+    width: 150px;
+    height: 220px;
+  }
+
+  .co__char--front .co__char-img {
+    transform: scale(1.12);
+  }
+
+  .co__ground {
+    width: 300px;
+  }
+
+  .co__card {
+    max-width: 340px;
+    padding: 1.8rem 1.5rem 1.5rem;
+  }
+
+  .co__card-img-wrap {
+    width: 140px;
+    height: 175px;
+  }
+
+  .co__card-name {
+    font-size: 1.3rem;
+  }
+
+  .co__card-ring {
+    width: 280px;
+    height: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  .co {
+    min-height: 440px;
+  }
+
+  .co__stage {
+    perspective: 700px;
+  }
+
+  .co__scene {
+    width: 140px;
+    height: 320px;
+  }
+
+  .co__char {
+    width: 140px;
+    margin-left: -70px;
+  }
+
+  .co__char-bgname {
+    font-size: 2.8rem;
+  }
+
+  .co__char-img {
+    width: 120px;
+    height: 180px;
+  }
+
+  .co__char--front .co__char-img {
+    transform: scale(1.1);
+  }
+
+  .co__ground {
+    width: 240px;
+    height: 40px;
+  }
+
+  .co__card {
+    max-width: 300px;
+    padding: 1.4rem 1.2rem 1.2rem;
+    border-radius: 24px;
+  }
+
+  .co__card-img-wrap {
+    width: 120px;
+    height: 150px;
+  }
+
+  .co__card-name {
+    font-size: 1.15rem;
+  }
+
+  .co__card-tagline {
+    font-size: 0.78rem;
+  }
+
+  .co__card-desc {
+    font-size: 0.78rem;
+  }
+
+  .co__card-ring {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .co__char {
+    transition-duration: 0.01s !important;
+  }
+
+  .co__card,
+  .co__card-img-wrap,
+  .co__card-glow,
+  .co__card-ring,
+  .co__card-shimmer {
+    animation: none !important;
+  }
+
+  .co__card-cursor {
+    animation: none;
+    opacity: 1;
+  }
+
+  .co__char-bgname,
+  .co__char-img {
+    transition-duration: 0.01s !important;
+  }
+}

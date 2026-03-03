@@ -1,0 +1,38 @@
+.login-page-logo {
+  width: 120px;
+  height: auto;
+  margin: 0 auto 1.5rem;
+  display: block;
+  animation: logoGlow 1.5s infinite ease-in-out, floatY 2s infinite ease-in-out;
+}
+
+@keyframes logoGlow {
+  0% { 
+    filter: drop-shadow(0 0 0px #9b5cff) drop-shadow(0 0 0px #00eaff); 
+  }
+  50% { 
+    filter: drop-shadow(0 0 15px #9b5cff) drop-shadow(0 0 15px #00eaff); 
+  }
+  100% { 
+    filter: drop-shadow(0 0 0px #9b5cff) drop-shadow(0 0 0px #00eaff); 
+  }
+}
+
+@keyframes floatY {
+  0% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-5px); 
+  }
+  100% { 
+    transform: translateY(0px); 
+  }
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .login-page-logo {
+    width: 140px;
+  }
+}
