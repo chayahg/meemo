@@ -1,4 +1,4 @@
 // Vercel Serverless Function entry point
-// Routes all /api/* requests through the Express app
+// This wraps the Express app for Vercel's serverless runtime
 import app from '../server/index.js';
 export default app;
