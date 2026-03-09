@@ -1,6 +1,5 @@
-// Vercel Serverless Function — handles ALL /api/* routes
-import app from '../server/index.js';
-
-export default function handler(req, res) {
+// Vercel Serverless Function — CJS wrapper that dynamically imports ESM server
+module.exports = async (req, res) => {
+  const { default: app } = await import('../server/index.js');
   return app(req, res);
-}
+};
