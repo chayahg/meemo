@@ -1,0 +1,17 @@
+{
+  "name": "mee-mo",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev:server": "cd server && node --watch index.js",
+    "dev:client": "cd client && npm run dev",
+    "build": "cd client && npm run build"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.6.0"
+  }
+}
