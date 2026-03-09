@@ -2067,7 +2067,7 @@
   }
 
   .message-input {
-    font-size: 16px;
+    font-size: 0.85rem;
     max-height: 100px;
   }
 
@@ -2077,15 +2077,13 @@
   }
 
   .send-btn {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    min-height: 36px;
+    width: 28px;
+    height: 28px;
   }
 
   .send-btn svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 
   .correction-panel {
