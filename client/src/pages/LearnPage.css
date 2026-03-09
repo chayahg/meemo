@@ -3595,17 +3595,17 @@
 
 .translate-textarea {
   width: 100%;
-  padding: 1rem 1.15rem;
+  padding: 1.15rem 1.25rem;
   background: var(--bg-glass);
   border: 1.5px solid var(--border-color);
   border-radius: 16px;
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-family: inherit;
   resize: none;
-  min-height: 88px;
+  min-height: 130px;
   transition: all 0.25s ease;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 .translate-textarea:focus {
