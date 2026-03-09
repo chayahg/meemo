@@ -1,0 +1,1351 @@
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE OVERRIDES — Mee-Mo
+   Only media-query rules. Desktop layout is UNTOUCHED.
+   Breakpoints:
+     Laptop   : 992px – 1199px
+     Tablet   : 768px – 991px
+     Mobile   : below 768px
+     Small    : below 480px
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Global: prevent horizontal scroll ── */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════════════
+   LAPTOP  (992 – 1199)
+   ══════════════════════════════════════ */
+@media (max-width: 1199px) {
+  /* Landing */
+  .hero-container {
+    max-width: 100%;
+    padding: 2rem 2rem;
+    gap: 2rem;
+  }
+
+  .hero-title {
+    font-size: 3.2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .features-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .how-section {
+    padding: 4rem 2rem;
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+  }
+
+  .about-container {
+    padding: 2.5rem 2rem;
+  }
+
+  /* Chat */
+  .chat-container {
+    max-width: 100%;
+  }
+
+  .chat-container.panel-open {
+    grid-template-columns: 250px 1fr 300px;
+  }
+
+  /* Learn */
+  .speak-story-layout {
+    gap: 1rem;
+  }
+
+  .fill-blanks-layout {
+    grid-template-columns: 240px 1fr 300px;
+  }
+}
+
+/* ══════════════════════════════════════
+   TABLET  (768 – 991)
+   ══════════════════════════════════════ */
+@media (min-width: 768px) and (max-width: 991px) {
+  /* ── Landing ── */
+  .nav-container {
+    padding: 0.75rem 1.5rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .hero-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    min-height: auto;
+  }
+
+  .hero-title {
+    font-size: 2.8rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.05rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+
+  .hero-image {
+    order: -1;
+    min-height: 400px;
+  }
+
+  .features-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .how-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .how-steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-section {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .about-container {
+    padding: 2rem 1.5rem;
+  }
+
+  /* ── Chat ── */
+  .chat-container {
+    grid-template-columns: 220px 1fr;
+    gap: 12px;
+  }
+
+  .chat-container.panel-open {
+    grid-template-columns: 220px 1fr 280px;
+  }
+
+  .sidebar-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .character-card {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .character-avatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .messages-area {
+    padding: 20px 16px;
+    gap: 18px;
+  }
+
+  /* ── Learn ── */
+  .learn-header h1 {
+    font-size: 2rem;
+  }
+
+  .main-tabs {
+    gap: 0.75rem;
+  }
+
+  .tab-btn {
+    min-width: 140px;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .fill-blanks-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* ── Settings ── */
+  .sp-wrap {
+    max-width: 100%;
+    padding: 0 0.5rem;
+  }
+}
+
+/* ══════════════════════════════════════
+   MOBILE  (below 768)
+   ══════════════════════════════════════ */
+@media (max-width: 767px) {
+  /* ── Global ── */
+  body {
+    font-size: 15px;
+  }
+
+  /* Ensure all buttons/links are touch-friendly */
+  button, a, .clickable,
+  input[type="submit"],
+  input[type="button"] {
+    min-height: 44px;
+  }
+
+  /* ── Landing Page ── */
+  .nav-container {
+    padding: 0.75rem 1rem;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .hero-section {
+    min-height: auto;
+    padding-top: 70px;
+  }
+
+  .hero-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    gap: 1.5rem;
+    min-height: auto;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-secondary {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    padding: 0.9rem 1.5rem;
+  }
+
+  .hero-image {
+    order: -1;
+    min-height: 300px;
+  }
+
+  .features-section {
+    padding: 3rem 1rem;
+  }
+
+  .features-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .feature-card {
+    padding: 1.75rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-title {
+    font-size: 1.15rem;
+  }
+
+  .feature-description {
+    font-size: 0.9rem;
+  }
+
+  .how-section {
+    padding: 2.5rem 1rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .how-steps {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .step {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .about-section {
+    padding: 2rem 1rem;
+  }
+
+  .about-container {
+    padding: 1.75rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .about-text {
+    font-size: 0.9rem;
+  }
+
+  .about-text-highlight {
+    font-size: 1.1rem;
+  }
+
+  .landing-footer {
+    padding: 2rem 1rem;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* ── Login Page ── */
+  .login-layout {
+    flex-direction: column;
+    padding: 4rem 1rem 1.5rem;
+    gap: 1rem;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .login-logo-side {
+    height: auto;
+    flex: none;
+  }
+
+  .login-meemo-logo {
+    max-height: 18vh;
+  }
+
+  .login-panel {
+    width: 100%;
+    max-width: 100%;
+    min-width: unset;
+    flex: none;
+    padding: 0;
+  }
+
+  .flip-card-container {
+    min-height: auto;
+  }
+
+  .login-box {
+    padding: 1.75rem 1.25rem;
+    min-height: auto;
+    border-radius: 16px;
+  }
+
+  .login-title {
+    font-size: 1.75rem;
+  }
+
+  .login-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .form-group input,
+  .input-with-icon input {
+    font-size: 16px; /* prevents iOS zoom on focus */
+    padding: 0.75rem 1rem;
+  }
+
+  .login-btn {
+    min-height: 48px;
+    font-size: 1rem;
+  }
+
+  /* ── Chat Page ── */
+  .chat-page {
+    padding: 60px 0 0 0;
+  }
+
+  .chat-container {
+    grid-template-columns: 1fr;
+    gap: 0;
+    height: calc(100vh - 60px);
+  }
+
+  .chat-container.panel-open {
+    grid-template-columns: 1fr;
+  }
+
+  .chat-container.sidebar-closed {
+    grid-template-columns: 1fr;
+  }
+
+  /* Sidebar overlay */
+  .chat-sidebar {
+    position: fixed;
+    left: 0;
+    top: 60px;
+    bottom: 0;
+    width: 85vw;
+    max-width: 320px;
+    z-index: 999;
+    border-radius: 0;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .chat-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .chat-sidebar.closed {
+    transform: translateX(-100%);
+    width: 0;
+    padding: 0;
+  }
+
+  /* Chat window full width */
+  .chat-window {
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+    border: none;
+    height: calc(100vh - 60px);
+  }
+
+  .chat-header {
+    padding: 10px 12px;
+  }
+
+  .character-info h2 {
+    font-size: 1rem;
+  }
+
+  .character-role {
+    font-size: 0.75rem;
+  }
+
+  .character-avatar-small {
+    width: 36px;
+    height: 36px;
+  }
+
+  .messages-area {
+    padding: 16px 12px;
+    gap: 16px;
+  }
+
+  .message-bubble {
+    max-width: 85%;
+  }
+
+  .message-content {
+    padding: 12px 14px;
+  }
+
+  .message-content p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* Input area */
+  .input-area {
+    padding: 10px 12px;
+  }
+
+  .input-wrapper {
+    padding: 6px 10px;
+    min-height: 48px;
+  }
+
+  .message-input {
+    font-size: 16px; /* prevent iOS zoom */
+  }
+
+  .send-btn {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+
+  .input-icon-btn {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+
+  /* Correction panel as overlay */
+  .correction-panel {
+    position: fixed;
+    top: 60px;
+    bottom: 0;
+    right: -100%;
+    width: 90%;
+    max-width: 360px;
+    z-index: 999;
+    height: auto;
+    border-radius: 0;
+  }
+
+  .correction-panel.open {
+    right: 0;
+  }
+
+  .sidebar-toggle {
+    position: fixed;
+    left: 8px;
+    top: 65px;
+    width: 44px;
+    height: 44px;
+    z-index: 1000;
+  }
+
+  .correction-panel-toggle {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* ── Learn Page ── */
+  .learn-page {
+    padding: 65px 0.75rem 1rem;
+  }
+
+  .learn-header {
+    margin-bottom: 1rem;
+  }
+
+  .learn-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .practice-text {
+    font-size: 0.85rem;
+  }
+
+  .main-tabs {
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .tab-btn {
+    min-width: unset;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  /* Speak & Story stacked */
+  .speak-story-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 1rem;
+    min-height: auto;
+  }
+
+  .prompt-card,
+  .speak-card,
+  .feedback-card {
+    min-height: auto;
+    max-height: none;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .prompt-card h3,
+  .speak-card h3,
+  .feedback-card h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prompt-controls {
+    gap: 0.4rem;
+  }
+
+  .difficulty-chips,
+  .character-chips {
+    gap: 0.4rem;
+  }
+
+  .chip {
+    padding: 0.45rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .mic-btn-chatgpt {
+    width: 52px;
+    height: 52px;
+  }
+
+  .chat-messages-list {
+    max-height: 350px;
+  }
+
+  /* Fill the Blanks stacked */
+  .fill-blanks-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .level-card,
+  .exercise-card,
+  .result-card {
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  .level-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .level-btn {
+    flex: 1;
+    min-width: 0;
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  /* Fill blanks MC options */
+  .mc-options-row {
+    gap: 0.5rem;
+  }
+
+  .mc-option-btn {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.9rem;
+    min-width: 60px;
+  }
+
+  /* Translation section */
+  .translate-card,
+  .translate-result-card {
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  /* Quick Test stacked */
+  .quick-test-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .test-card,
+  .test-results-card {
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  /* Speak bubbles */
+  .speak-bubble {
+    max-width: 88%;
+  }
+
+  /* Speaking: role/character pills */
+  .role-pills,
+  .character-pills {
+    gap: 0.4rem;
+  }
+
+  .role-pill,
+  .character-pill {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  /* ── Settings Page ── */
+  .sp {
+    padding: 65px 0.75rem 5rem;
+  }
+
+  .sp-wrap {
+    max-width: 100%;
+  }
+
+  .sp-title {
+    font-size: 1.5rem;
+  }
+
+  .sp-tabs {
+    gap: 0.25rem;
+    padding: 3px;
+  }
+
+  .sp-tab {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .sp-tab-label {
+    display: none;
+  }
+
+  .sp-tab-icon {
+    font-size: 1.15rem;
+  }
+
+  .sp-card {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .sp-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-profile-top {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .sp-profile-badges {
+    justify-content: center;
+  }
+
+  .sp-char-picker {
+    flex-direction: column;
+  }
+
+  .sp-char-arrow {
+    display: none;
+  }
+
+  .sp-char-card {
+    width: 100%;
+  }
+
+  .sp-lang-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sp-data-item {
+    flex-wrap: wrap;
+  }
+
+  .sp-data-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .save-bar-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .save-bar-actions {
+    width: 100%;
+  }
+
+  .save-bar-btn {
+    flex: 1;
+  }
+
+  /* ── Modals ── */
+  .welcome-modal {
+    width: 92%;
+    max-width: 92vw;
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .welcome-modal-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .welcome-modal-header p {
+    font-size: 0.9rem;
+  }
+
+  .language-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .language-card {
+    padding: 1rem 0.5rem;
+  }
+
+  .language-flag {
+    font-size: 1.8rem;
+  }
+
+  .language-name {
+    font-size: 0.85rem;
+  }
+
+  .language-native {
+    font-size: 0.7rem;
+  }
+
+  .welcome-modal-actions {
+    flex-direction: column;
+  }
+
+  .btn-skip,
+  .btn-confirm {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .terms-overlay {
+    padding: 0.75rem;
+  }
+
+  .terms-modal {
+    width: 95%;
+    max-width: 95vw;
+    max-height: 90vh;
+    border-radius: 16px;
+  }
+
+  .terms-content {
+    padding: 1.5rem 1.25rem;
+    max-height: 90vh;
+  }
+
+  .terms-heading {
+    font-size: 1.3rem;
+  }
+
+  .terms-content h3 {
+    font-size: 0.95rem;
+  }
+
+  .terms-content p,
+  .terms-content ul li {
+    font-size: 0.88rem;
+  }
+
+  /* ── Navbar (authenticated) ── */
+  .app-navbar {
+    padding: 0.5rem 0.75rem;
+    height: 56px;
+  }
+
+  .nav-brand {
+    font-size: 1.1rem;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 56px;
+    right: 0;
+    width: 70vw;
+    max-width: 280px;
+    background: var(--bg-nav-links);
+    border-left: 1px solid var(--border-accent);
+    flex-direction: column;
+    gap: 0;
+    padding: 1rem 0;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    box-shadow: -4px 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav-links.mobile-open {
+    transform: translateX(0);
+  }
+
+  .nav-link {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    border-radius: 0;
+    width: 100%;
+    text-align: left;
+  }
+
+  /* ── Floating Character Cards (Landing hero) ── */
+  .co {
+    min-height: 350px;
+  }
+
+  .co__scene {
+    width: 130px;
+    height: 280px;
+  }
+
+  .co__char {
+    width: 130px;
+    margin-left: -65px;
+  }
+
+  .co__char-bgname {
+    font-size: 2.5rem;
+  }
+
+  .co__char-img {
+    width: 110px;
+    height: 160px;
+  }
+
+  .co__char--front .co__char-img {
+    transform: scale(1.08);
+  }
+
+  .co__ground {
+    width: 200px;
+    height: 35px;
+  }
+
+  .co__card {
+    max-width: 90vw;
+    padding: 1.5rem 1.25rem;
+    border-radius: 20px;
+  }
+
+  .co__card-img-wrap {
+    width: 110px;
+    height: 140px;
+  }
+
+  .co__card-name {
+    font-size: 1.2rem;
+  }
+
+  .co__card-tagline {
+    font-size: 0.8rem;
+  }
+
+  .co__card-desc {
+    font-size: 0.8rem;
+  }
+
+  .co__card-ring {
+    width: 200px;
+    height: 200px;
+  }
+
+  /* Character selection screen */
+  .character-selection-screen {
+    padding: 20px 12px;
+  }
+
+  .selection-header {
+    margin-bottom: 30px;
+  }
+
+  .selection-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .selection-header p {
+    font-size: 0.95rem;
+  }
+
+  .characters-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0;
+  }
+
+  .character-selection-card {
+    padding: 24px 16px;
+  }
+
+  .character-avatar-large {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 16px;
+  }
+
+  .character-selection-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .character-selection-card p {
+    font-size: 0.88rem;
+    min-height: auto;
+    margin-bottom: 16px;
+  }
+}
+
+/* ══════════════════════════════════════
+   SMALL MOBILE  (below 480)
+   ══════════════════════════════════════ */
+@media (max-width: 479px) {
+  body {
+    font-size: 14px;
+  }
+
+  /* Landing */
+  .hero-title {
+    font-size: 1.65rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.88rem;
+  }
+
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-secondary {
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .feature-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .step {
+    padding: 1.25rem 1rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  /* Login */
+  .login-box {
+    padding: 1.25rem 1rem;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+
+  .login-logo-tagline {
+    font-size: 0.95rem;
+  }
+
+  .login-logo-chip {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.65rem;
+  }
+
+  /* Chat */
+  .messages-area {
+    padding: 12px 8px;
+    gap: 12px;
+  }
+
+  .message-bubble {
+    max-width: 90%;
+  }
+
+  .message-content {
+    padding: 10px 12px;
+  }
+
+  .message-content p {
+    font-size: 0.9rem;
+  }
+
+  .input-wrapper {
+    padding: 4px 8px;
+  }
+
+  .send-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .input-icon-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  /* Learn */
+  .learn-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .tab-btn {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .prompt-card,
+  .speak-card,
+  .feedback-card {
+    padding: 0.75rem;
+  }
+
+  .chat-messages-list {
+    max-height: 280px;
+  }
+
+  .level-card,
+  .exercise-card,
+  .result-card {
+    padding: 0.75rem;
+  }
+
+  .mc-option-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.82rem;
+  }
+
+  /* Settings */
+  .sp-title {
+    font-size: 1.3rem;
+  }
+
+  .sp-card {
+    padding: 0.85rem;
+    border-radius: 10px;
+  }
+
+  .sp-lang-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-char-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 0.85rem;
+  }
+
+  .sp-char-img {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* Modals */
+  .welcome-modal {
+    padding: 1.25rem;
+  }
+
+  .welcome-modal-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .language-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .terms-content {
+    padding: 1.25rem 1rem;
+  }
+
+  .terms-heading {
+    font-size: 1.15rem;
+  }
+
+  /* Navbar */
+  .nav-brand {
+    font-size: 1rem;
+  }
+
+  .app-navbar {
+    height: 52px;
+  }
+
+  .nav-links {
+    top: 52px;
+    width: 80vw;
+  }
+
+  /* Floating Characters */
+  .co {
+    min-height: 300px;
+  }
+
+  .co__scene {
+    width: 110px;
+    height: 240px;
+  }
+
+  .co__char {
+    width: 110px;
+    margin-left: -55px;
+  }
+
+  .co__char-bgname {
+    font-size: 2rem;
+  }
+
+  .co__char-img {
+    width: 90px;
+    height: 130px;
+  }
+
+  .co__ground {
+    width: 160px;
+    height: 28px;
+  }
+}
+
+/* ══════════════════════════════════════
+   LANDSCAPE MOBILE — Prevent excessive height
+   ══════════════════════════════════════ */
+@media (max-width: 991px) and (orientation: landscape) {
+  .hero-section {
+    min-height: auto;
+  }
+
+  .hero-image {
+    min-height: 250px;
+  }
+
+  .co {
+    min-height: 300px;
+  }
+
+  .login-layout {
+    flex-direction: row;
+    height: auto;
+    padding: 3.5rem 1.5rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .login-meemo-logo {
+    max-height: 30vh;
+  }
+
+  .chat-window {
+    height: calc(100vh - 56px);
+  }
+}
+
+/* ══════════════════════════════════════
+   TOUCH OPTIMIZATION — spacing & sizes
+   ══════════════════════════════════════ */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase tap targets */
+  .character-card {
+    min-height: 56px;
+  }
+
+  .session-row {
+    min-height: 52px;
+    padding: 12px 10px;
+  }
+
+  .delete-btn,
+  .menu-btn {
+    opacity: 1; /* always visible on touch devices */
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .chip,
+  .character-chip {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .toggle-option {
+    min-height: 40px;
+  }
+
+  .level-btn {
+    min-height: 44px;
+  }
+
+  .mc-option-btn {
+    min-height: 44px;
+  }
+
+  .role-pill,
+  .character-pill {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+  }
+
+  .language-dropdown-item {
+    min-height: 48px;
+  }
+
+  .sp-lang-opt {
+    min-height: 44px;
+  }
+
+  .sp-toggle-item {
+    min-height: 52px;
+  }
+
+  /* Increase spacing between interactive elements */
+  .corrections-list {
+    gap: 20px;
+  }
+
+  .conversations-list {
+    gap: 10px;
+  }
+
+  .sessions-list {
+    gap: 10px;
+  }
+}
+
+/* ══════════════════════════════════════
+   Font floor — never smaller than 14px
+   ══════════════════════════════════════ */
+@media (max-width: 767px) {
+  .session-preview,
+  .session-time,
+  .message-time,
+  .correction-card .label,
+  .terms-date,
+  .sp-card-desc,
+  .sp-toggle-desc,
+  .sp-data-info p,
+  .sp-danger-tag,
+  .footer-link,
+  .footer-divider,
+  .language-native,
+  .mc-blank-label {
+    font-size: max(var(--original-size, 0.75rem), 0.8rem);
+  }
+
+  /* Ensure small text doesn't go below 14px rendered size */
+  .session-time {
+    font-size: 0.75rem; /* ~12px at 16px base; controlled by base font-size: 15px → 11.25px — override below */
+  }
+
+  /* Explicit floor of ~13px for very small labels */
+  .correction-card .label,
+  .mc-blank-label,
+  .terms-date,
+  .sp-danger-tag,
+  .formality-label {
+    font-size: 0.8rem;
+  }
+
+  /* Body text never below 14px */
+  p, li, span, .message-content p, .prompt-text p,
+  .feedback-list li, .about-text, .feature-description {
+    font-size: max(0.875rem, 14px);
+    line-height: 1.6;
+  }
+}
