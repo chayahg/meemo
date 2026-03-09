@@ -1,5 +1,4 @@
-// Vercel Serverless Function — CJS wrapper that dynamically imports ESM server
-module.exports = async (req, res) => {
-  const { default: app } = await import('../server/index.js');
-  return app(req, res);
-};
+// Vercel Serverless Function — ESM handler
+import app from '../server/index.js';
+
+export default app;
