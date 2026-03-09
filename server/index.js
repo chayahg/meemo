@@ -10,7 +10,13 @@ import translateRoutes from './routes/translateRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-dotenv.config({ path: join(__dirname, '.env') });
+
+// Load .env for local development; on Vercel, env vars are injected automatically
+try {
+  dotenv.config({ path: join(__dirname, '.env') });
+} catch (e) {
+  // Ignore — .env doesn't exist on Vercel
+}
 
 // Debug: Check if Gemini API key is loaded
 console.log('🔑 Gemini API Key loaded:', process.env.GEMINI_API_KEY ? 'YES ✅' : 'NO ❌');
@@ -55,17 +61,19 @@ app.use(express.urlencoded({ extended: true }));
 const userRequestLog = new Map();
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute window
 const MAX_REQUESTS_PER_WINDOW = 10;      // 10 messages per minute per user
-const CLEANUP_INTERVAL_MS = 5 * 60 * 1000; // Clean up old entries every 5 min
 
-// Periodically clean stale entries to prevent memory leaks
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, timestamps] of userRequestLog.entries()) {
-    const recent = timestamps.filter(t => now - t < RATE_LIMIT_WINDOW_MS);
-    if (recent.length === 0) userRequestLog.delete(key);
-    else userRequestLog.set(key, recent);
-  }
-}, CLEANUP_INTERVAL_MS);
+// Periodically clean stale entries (only in long-running server, not serverless)
+if (process.env.VERCEL !== '1') {
+  const CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, timestamps] of userRequestLog.entries()) {
+      const recent = timestamps.filter(t => now - t < RATE_LIMIT_WINDOW_MS);
+      if (recent.length === 0) userRequestLog.delete(key);
+      else userRequestLog.set(key, recent);
+    }
+  }, CLEANUP_INTERVAL_MS);
+}
 
 const rateLimiter = (req, res, next) => {
   const userId = req.body?.userId || req.ip || 'anonymous';
