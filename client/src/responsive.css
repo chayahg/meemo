@@ -11,19 +11,6 @@ html, body {
 }
 *, *::before, *::after { box-sizing: border-box; }
 
-/* ══════════════════════════════════════════════════════════════
-   RESPONSIVE OVERRIDES — Mee-Mo
-   Loaded LAST so same-specificity rules beat earlier files.
-   Only media-query rules. Desktop layout is UNTOUCHED.
-   ══════════════════════════════════════════════════════════════ */
-
-/* ── Global: prevent horizontal scroll ── */
-html, body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-*, *::before, *::after { box-sizing: border-box; }
-
 /* ══════════════════════════════════════
    MOBILE  (max-width: 768px)
    ══════════════════════════════════════ */
@@ -133,8 +120,35 @@ html, body {
   }
 
   /* ───────────────────────────────────
-     LANDING / HOME PAGE
+     LANDING / HOME PAGE — Navigation
      ─────────────────────────────────── */
+  .landing-nav {
+    padding: 0;
+  }
+
+  .nav-container {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .nav-logo {
+    gap: 0.4rem;
+  }
+
+  .nav-logo-img {
+    height: 1.8rem;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .btn-login {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.82rem;
+    border-radius: 10px;
+  }
+
+  /* Legacy landing navbar fallbacks */
   .navbar-container {
     padding: 0.5rem 0.75rem;
   }
@@ -158,123 +172,134 @@ html, body {
 
   .hero-section {
     min-height: auto;
-    padding-top: 60px;
+    padding-top: 52px;
   }
 
   .hero-container {
     grid-template-columns: 1fr;
     text-align: center;
-    padding: 1rem 0.75rem;
-    gap: 1rem;
+    padding: 0.75rem 0.75rem;
+    gap: 0.75rem;
     min-height: auto;
   }
 
   .hero-title {
-    font-size: 1.65rem;
+    font-size: 1.5rem;
+    line-height: 1.2;
   }
 
   .hero-subtitle {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
 
   .hero-buttons {
     flex-direction: column;
     width: 100%;
-    gap: 0.6rem;
+    gap: 0.5rem;
   }
 
   .hero-buttons .btn-primary,
   .hero-buttons .btn-secondary {
     width: 100%;
     text-align: center;
-    font-size: 0.9rem;
-    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    padding: 0.6rem 0.85rem;
+    min-height: 42px;
   }
 
   .hero-image {
     order: -1;
-    min-height: 260px;
+    min-height: 220px;
   }
 
   .features-section {
-    padding: 2rem 0.75rem;
+    padding: 1.5rem 0.75rem;
   }
 
   .features-container {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 0.6rem;
   }
 
   .feature-card {
-    padding: 1.25rem 1rem;
-    border-radius: 14px;
+    padding: 0.85rem 0.75rem;
+    border-radius: 12px;
   }
 
   .feature-icon {
-    font-size: 2rem;
-    margin-bottom: 0.6rem;
+    font-size: 1.6rem;
+    margin-bottom: 0.4rem;
   }
 
   .feature-title {
-    font-size: 1rem;
+    font-size: 0.92rem;
+    margin-bottom: 0.2rem;
   }
 
   .feature-description {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
   }
 
   .how-section {
-    padding: 2rem 0.75rem;
+    padding: 1.5rem 0.75rem;
   }
 
   .section-title {
-    font-size: 1.35rem;
-    margin-bottom: 1.25rem;
+    font-size: 1.2rem;
+    margin-bottom: 0.85rem;
   }
 
   .how-steps {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
 
-  .step {
-    padding: 1.25rem 1rem;
+  .step,
+  .step-card {
+    padding: 0.85rem 0.75rem;
+    border-radius: 12px;
   }
 
   .step-number {
-    font-size: 1.75rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
   }
 
   .step h3 {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
   }
 
   .step p {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
   }
 
   .about-section {
-    padding: 1.5rem 0.75rem;
+    padding: 1.25rem 0.75rem;
   }
 
   .about-container {
-    padding: 1.25rem 1rem;
-    border-radius: 14px;
+    padding: 1rem 0.85rem;
+    border-radius: 12px;
   }
 
   .about-text {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
   }
 
   .about-text-highlight {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
   }
 
   .landing-footer {
-    padding: 1.25rem 0.75rem;
+    padding: 1rem 0.75rem;
   }
 
   .footer-links {
@@ -282,30 +307,44 @@ html, body {
     gap: 0.4rem;
   }
 
+  .footer-text {
+    font-size: 0.75rem;
+  }
+
   /* ───────────────────────────────────
      FLOATING CHARACTER CARDS (Landing hero)
      ─────────────────────────────────── */
   .co {
-    min-height: 280px;
+    min-height: 240px;
+  }
+
+  .co__stage {
+    transform: translateZ(0);
+    will-change: transform;
   }
 
   .co__scene {
-    width: 100px;
-    height: 220px;
+    width: 90px;
+    height: 200px;
+    will-change: transform;
   }
 
   .co__char {
-    width: 100px;
-    margin-left: -50px;
+    width: 90px;
+    margin-left: -45px;
+    will-change: transform;
+    transform: translateZ(0);
+    transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1) !important;
   }
 
   .co__char-bgname {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
 
   .co__char-img {
-    width: 85px;
-    height: 125px;
+    width: 75px;
+    height: 110px;
+    will-change: transform;
   }
 
   .co__char--front .co__char-img {
@@ -313,36 +352,36 @@ html, body {
   }
 
   .co__ground {
-    width: 160px;
-    height: 28px;
+    width: 140px;
+    height: 24px;
   }
 
   .co__card {
-    max-width: 88vw;
-    padding: 1rem 0.85rem;
-    border-radius: 16px;
+    max-width: 85vw;
+    padding: 0.85rem 0.75rem;
+    border-radius: 14px;
   }
 
   .co__card-img-wrap {
-    width: 85px;
-    height: 110px;
+    width: 75px;
+    height: 95px;
   }
 
   .co__card-name {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .co__card-tagline {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
   }
 
   .co__card-desc {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
   }
 
   .co__card-ring {
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
   }
 
   /* ───────────────────────────────────
@@ -595,32 +634,32 @@ html, body {
   }
 
   .chat-header {
-    padding: 6px 10px;
+    padding: 8px 12px;
     flex-wrap: nowrap;
     border-radius: 0;
-    gap: 6px;
+    gap: 8px;
   }
 
   .character-info {
-    gap: 6px;
+    gap: 8px;
     overflow: hidden;
   }
 
   .character-avatar-small {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     flex-shrink: 0;
   }
 
   .character-info h2 {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   .character-role {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
   }
 
   /* Chat mode toggle - compact */
@@ -632,14 +671,15 @@ html, body {
 
   .toggle-option {
     flex: 1;
-    padding: 4px 8px;
-    font-size: 0.72rem;
+    padding: 5px 10px;
+    font-size: 0.78rem;
+    min-height: 32px;
   }
 
   /* Character selector - compact */
   .character-selector {
-    padding: 0.4rem 0.6rem;
-    gap: 5px;
+    padding: 0.35rem 0.5rem;
+    gap: 6px;
     overflow-x: auto;
     scrollbar-width: none;
   }
@@ -649,70 +689,74 @@ html, body {
   }
 
   .character-chip {
-    padding: 4px 10px;
-    font-size: 0.75rem;
+    padding: 5px 12px;
+    font-size: 0.78rem;
     white-space: nowrap;
+    min-height: 32px;
   }
 
   /* Correction panel toggle */
   .correction-panel-toggle {
     display: flex;
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     padding: 5px;
   }
 
-  /* Messages area - MUCH more compact */
+  /* Messages area — readable & comfortable */
   .messages-area {
-    padding: 10px 8px;
-    gap: 10px;
+    padding: 12px 10px;
+    gap: 12px;
     max-height: none;
     flex: 1;
+    -webkit-overflow-scrolling: touch;
   }
 
   .message-bubble {
-    max-width: 82%;
+    max-width: 85%;
   }
 
   .message-content {
-    padding: 8px 10px;
-    font-size: 0.82rem;
-    line-height: 1.5;
-    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    border-radius: 14px;
   }
 
   .message-content p {
-    font-size: 0.82rem;
+    font-size: 0.9rem;
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
   .message-time {
-    font-size: 0.6rem;
-    margin-top: 3px;
+    font-size: 0.62rem;
+    margin-top: 4px;
   }
 
   .tts-icon-btn {
-    padding: 3px 6px;
-    font-size: 0.65rem;
+    padding: 4px 8px;
+    font-size: 0.7rem;
     border-radius: 8px;
-    margin-top: 2px;
+    margin-top: 3px;
+    min-height: 28px;
   }
 
   .corrected-text {
-    padding: 4px 7px;
-    margin-top: 4px;
+    padding: 5px 8px;
+    margin-top: 5px;
     gap: 4px;
   }
 
   .corrected-text span {
-    font-size: 0.75rem;
+    font-size: 0.78rem;
   }
 
-  /* Input area - compact & fixed at bottom */
+  /* Input area — comfortable & fixed at bottom */
   .input-area {
-    padding: 6px 8px;
+    padding: 8px 10px;
     border-radius: 0;
+    border-top: 1px solid var(--border-color, rgba(100, 120, 180, 0.15));
   }
 
   .input-options {
@@ -720,33 +764,33 @@ html, body {
   }
 
   .grammar-tips-checkbox {
-    font-size: 0.75rem;
-    gap: 5px;
+    font-size: 0.78rem;
+    gap: 6px;
   }
 
   .grammar-tips-checkbox input[type="checkbox"] {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
   }
 
   .input-wrapper {
-    padding: 4px 8px;
-    min-height: 40px;
-    border-radius: 20px;
-    gap: 4px;
+    padding: 5px 10px;
+    min-height: 44px;
+    border-radius: 22px;
+    gap: 6px;
   }
 
   .message-input {
     font-size: 16px; /* prevent iOS zoom */
-    max-height: 80px;
-    line-height: 1.3;
+    max-height: 100px;
+    line-height: 1.4;
   }
 
   .input-icon-btn {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    min-height: 34px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
   }
 
   .input-icon-btn svg {
@@ -755,15 +799,15 @@ html, body {
   }
 
   .send-btn {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    min-height: 34px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
   }
 
   .send-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 17px;
+    height: 17px;
   }
 
   /* Correction panel as slide-in overlay */
@@ -822,7 +866,7 @@ html, body {
      LEARN PAGE
      ─────────────────────────────────── */
   .learn-page {
-    padding: 56px 0.5rem 0.75rem;
+    padding: 54px 0.5rem 0.75rem;
   }
 
   .learn-container {
@@ -830,30 +874,41 @@ html, body {
   }
 
   .learn-header {
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.5rem;
   }
 
   .learn-header h1 {
-    font-size: 1.35rem;
+    font-size: 1.2rem;
   }
 
   .practice-text {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
   }
 
-  /* Main Tabs - compact stacked */
+  /* Main Tabs - horizontal scroll row */
   .main-tabs {
-    flex-direction: column;
-    gap: 0.4rem;
-    margin-bottom: 0.75rem;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+    margin-bottom: 0.6rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+
+  .main-tabs::-webkit-scrollbar {
+    display: none;
   }
 
   .tab-btn {
     min-width: unset;
-    width: 100%;
-    padding: 0.55rem 0.85rem;
-    font-size: 0.85rem;
+    width: auto;
+    flex: 0 0 auto;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.78rem;
     border-radius: 999px;
+    white-space: nowrap;
   }
 
   /* ── Speak & Story ── */
@@ -870,15 +925,15 @@ html, body {
     min-height: auto;
     max-height: none;
     height: auto;
-    padding: 0.75rem;
-    border-radius: 14px;
+    padding: 0.65rem;
+    border-radius: 12px;
   }
 
   .prompt-card h3,
   .speak-card h3,
   .feedback-card h3 {
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
   }
 
   .prompt-controls {
@@ -992,21 +1047,21 @@ html, body {
   /* ── Fill the Blanks ── */
   .fill-blanks-layout {
     grid-template-columns: 1fr;
-    gap: 0.6rem;
+    gap: 0.5rem;
   }
 
   .level-card,
   .exercise-card,
   .result-card {
-    padding: 0.75rem;
-    border-radius: 12px;
+    padding: 0.65rem;
+    border-radius: 10px;
   }
 
   .level-card h3,
   .exercise-card h3,
   .result-card h3 {
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
   }
 
   .level-buttons {
@@ -1660,8 +1715,21 @@ html, body {
   }
 
   /* Landing */
+  .nav-container {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .nav-logo-img {
+    height: 1.5rem;
+  }
+
+  .btn-login {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+  }
+
   .hero-title {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
   }
 
   .hero-subtitle {
@@ -1723,8 +1791,8 @@ html, body {
   }
 
   .messages-area {
-    padding: 8px 6px;
-    gap: 8px;
+    padding: 10px 8px;
+    gap: 10px;
   }
 
   .message-bubble {
@@ -1732,31 +1800,32 @@ html, body {
   }
 
   .message-content {
-    padding: 6px 8px;
-    border-radius: 10px;
+    padding: 8px 10px;
+    border-radius: 12px;
   }
 
   .message-content p {
-    font-size: 0.78rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
   }
 
   .input-wrapper {
-    padding: 3px 6px;
-    min-height: 36px;
+    padding: 4px 8px;
+    min-height: 40px;
   }
 
   .send-btn,
   .input-icon-btn {
-    width: 30px;
-    height: 30px;
-    min-width: 30px;
-    min-height: 30px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
   }
 
   .send-btn svg,
   .input-icon-btn svg {
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
   }
 
   /* Learn */

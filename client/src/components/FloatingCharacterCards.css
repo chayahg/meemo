@@ -32,6 +32,8 @@
   flex-direction: column;
   align-items: center;
   transition: opacity 0.5s ease, filter 0.5s ease;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .co__stage--dimmed {
@@ -69,6 +71,9 @@
   cursor: pointer;
   transform-style: preserve-3d;  /* needed for bgname's translateZ */
   transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* During snap animation — optional subtle motion indication */
