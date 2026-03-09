@@ -1441,7 +1441,7 @@ function ChatPage() {
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           aria-label="Toggle sidebar"
         >
-          {isSidebarOpen ? '✕' : '☰'}
+          {isSidebarOpen ? '✕' : '💬'}
         </button>
         
         <button 
@@ -1449,7 +1449,7 @@ function ChatPage() {
           onClick={() => setIsCorrectionPanelOpen(!isCorrectionPanelOpen)}
           aria-label="Toggle corrections"
         >
-          {isCorrectionPanelOpen ? '✕' : '📝'}
+          {isCorrectionPanelOpen ? '✕' : '✨'}
         </button>
 
         <ChatSidebar

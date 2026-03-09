@@ -1988,6 +1988,7 @@
     max-height: none;
     height: auto;
     padding: 1.25rem;
+    overflow: visible;
   }
 
   .prompt-card h3,
@@ -2001,11 +2002,16 @@
   .prompt-controls {
     gap: 0.5rem;
     margin-bottom: 0.75rem;
+    flex-shrink: 0;
+    flex-grow: 0;
+    overflow: visible;
   }
 
   .btn-new-prompt {
     padding: 0.65rem 0.9rem;
     font-size: 0.95rem;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   .difficulty-chips {
@@ -3906,7 +3912,7 @@
 
   .translate-textarea {
     font-size: 0.95rem;
-    min-height: 72px;
+    min-height: 120px;
   }
 
   .translate-actions {
