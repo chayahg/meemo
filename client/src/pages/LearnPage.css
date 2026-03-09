@@ -1961,16 +1961,26 @@
     font-size: 0.9rem;
   }
 
-  /* Main Tabs - Stack vertically on mobile */
+  /* Main Tabs - Horizontal scroll on mobile */
   .main-tabs {
-    flex-direction: column;
-    gap: 0.75rem;
+    flex-direction: row;
+    gap: 0.5rem;
     margin-bottom: 1.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .main-tabs::-webkit-scrollbar {
+    display: none;
   }
 
   .tab-btn {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
   }
 
   /* Speak & Story Layout - Stack vertically */
@@ -2300,8 +2310,8 @@
   }
 
   .chip {
-    padding: 0.45rem;
-    font-size: 0.75rem;
+    padding: 0.45rem 0.55rem;
+    font-size: 0.8rem;
   }
 
   .mic-btn-chatgpt {
@@ -2310,7 +2320,7 @@
   }
 
   .mic-label-text {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
   }
 
   .chat-messages-list {
@@ -2319,7 +2329,7 @@
   }
 
   .message-text {
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     padding: 0.6rem 0.8rem;
   }
 
@@ -2335,7 +2345,7 @@
 
   .level-btn {
     padding: 0.55rem 0.4rem;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
   }
 
   .question-text {
@@ -2375,12 +2385,12 @@
   }
 
   .test-question-text {
-    font-size: 0.85rem;
+    font-size: 0.88rem;
   }
 
   .test-option {
     padding: 0.6rem;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
   }
 }
 
