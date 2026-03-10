@@ -102,7 +102,7 @@ npm run dev
 cd client
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser!
+Open https://your-demo.vercel.app in your browser!
 
 ---
 
