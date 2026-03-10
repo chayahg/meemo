@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
+import { useToast } from '../contexts/ToastContext';
 import { LANGUAGES, getLanguageByCode } from '../config/languageConfig';
 import './SettingsPage.css';
 
 function SettingsPage() {
   const { user, loading, updateUserData, logout, switchLanguage } = useUser();
+  const { showToast, showConfirm } = useToast();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState(null);
@@ -52,7 +54,7 @@ function SettingsPage() {
 
   const handleSaveChanges = async () => {
     if (!formData.profile.displayName.trim()) {
-      alert('Display name cannot be empty');
+      showToast('Display name cannot be empty', 'error');
       return;
     }
     setSaving(true);
@@ -66,14 +68,14 @@ function SettingsPage() {
       }
     } catch (error) {
       console.error('Error saving settings:', error);
-      alert('Failed to save settings. Please try again.');
+      showToast('Failed to save settings. Please try again.', 'error');
     } finally {
       setSaving(false);
     }
   };
 
   const handleReset = () => {
-    if (confirm('Reset to last saved settings?')) {
+    showConfirm('Reset to last saved settings?', () => {
       if (user) {
         setFormData({
           profile: { ...user.profile },
@@ -82,7 +84,7 @@ function SettingsPage() {
         });
       }
       setHasUnsavedChanges(false);
-    }
+    });
   };
 
   const handleCharacterSelect = (characterId) => {
@@ -95,55 +97,54 @@ function SettingsPage() {
   };
 
   const handleClearHistory = () => {
-    if (confirm('⚠️ This will permanently delete all your local practice history. Continue?')) {
+    showConfirm('This will permanently delete all your local practice history. Continue?', () => {
       localStorage.removeItem('meemo_chat_history');
-      alert('Practice history cleared!');
-    }
+      showToast('Practice history cleared!', 'success');
+    });
   };
 
   const handleDeleteAllHistory = () => {
-    if (confirm('⚠️⚠️ This will DELETE ALL your history and data. This cannot be undone! Continue?')) {
+    showConfirm('This will DELETE ALL your history and data. This cannot be undone! Continue?', () => {
       localStorage.removeItem('meemo_chat_history');
       localStorage.removeItem('meemo_settings');
-      alert('All history deleted. Reloading...');
-      window.location.reload();
-    }
+      showToast('All history deleted. Reloading...', 'success');
+      setTimeout(() => window.location.reload(), 1500);
+    });
   };
 
   const handleDownloadData = () => {
-    alert('Download data feature coming soon!');
+    showToast('Download data feature coming soon!', 'info');
   };
 
   const handleLogout = async () => {
-    if (confirm('Log out of Mee-Mo?')) {
+    showConfirm('Log out of Mee-Mo?', async () => {
       try {
         await logout();
         navigate('/login');
       } catch (error) {
         console.error('Error logging out:', error);
-        alert('Failed to log out. Please try again.');
+        showToast('Failed to log out. Please try again.', 'error');
       }
-    }
+    });
   };
 
   const handleLanguageChange = async (newLanguageCode) => {
     if (newLanguageCode === formData.profile.targetLanguage) return;
     const newLang = getLanguageByCode(newLanguageCode);
     const currentLang = getLanguageByCode(formData.profile.targetLanguage);
-    const confirmed = confirm(
-      `Switch from ${currentLang.name} to ${newLang.name}?\n\nYour progress in ${currentLang.name} will be saved, and you'll load your ${newLang.name} progress.`
-    );
-    if (!confirmed) return;
-    setSwitchingLanguage(true);
-    try {
-      await switchLanguage(newLanguageCode);
-      alert(`✅ Switched to ${newLang.name}! Start practicing now.`);
-    } catch (error) {
-      console.error('Error switching language:', error);
-      alert('Failed to switch language. Please try again.');
-    } finally {
-      setSwitchingLanguage(false);
-    }
+    
+    showConfirm(`Switch from ${currentLang.name} to ${newLang.name}?\nYour progress in ${currentLang.name} will be saved, and you'll load your ${newLang.name} progress.`, async () => {
+      setSwitchingLanguage(true);
+      try {
+        await switchLanguage(newLanguageCode);
+        showToast(`Switched to ${newLang.name}! Start practicing now.`, 'success');
+      } catch (error) {
+        console.error('Error switching language:', error);
+        showToast('Failed to switch language. Please try again.', 'error');
+      } finally {
+        setSwitchingLanguage(false);
+      }
+    });
   };
 
   const updateNestedField = (section, field, value) => {

@@ -126,7 +126,7 @@ export const chatWithMeeMo = async (req, res) => {
     if (isTeachingForeignLanguage) {
       // ===== FOREIGN LANGUAGE TEACHING MODE =====
       const userNameInstruction = userName 
-        ? `The user's name is "${userName}". Use their name occasionally when it feels natural (greetings, encouragement). Remember their name throughout the conversation.`
+        ? `The user's name is "${userName}". CRITICAL RULE: ONLY use their name RARELY (e.g., in a first greeting or a major milestone). DO NOT mention their name in normal, back-and-forth replies. Overusing their name sounds unnatural.`
         : '';
 
       prompt = `You are ${selectedCharacter.name}, an AI language learning buddy that teaches ${targetLanguage} to English speakers through natural conversation.
@@ -211,7 +211,7 @@ Respond with JSON only:`;
     } else {
       // ===== ENGLISH LEARNING MODE (original behavior) =====
       const userNameInstruction = userName 
-        ? `The user's name is "${userName}". Use their name occasionally when it feels natural (greetings, encouragement). Remember their name throughout the conversation.`
+        ? `The user's name is "${userName}". CRITICAL RULE: ONLY use their name RARELY (e.g., in a first greeting or a major milestone). DO NOT mention their name in normal, back-and-forth replies. Overusing their name sounds unnatural.`
         : '';
 
       prompt = `You are ${selectedCharacter.name}, an AI language learning buddy that chats naturally AND corrects the user's English.
@@ -282,10 +282,16 @@ Respond with JSON only:`;
           return text;
         } catch (modelError) {
           lastError = modelError;
-          const isRateLimit = modelError.message?.includes('429') || modelError.message?.includes('quota');
-          console.warn(`⚠️ ${modelName} failed: ${isRateLimit ? 'Rate limited' : modelError.message}`);
-          if (!isRateLimit) {
-            throw modelError; // Non-rate-limit errors should not retry
+          const msg = modelError.message || '';
+          const isRateLimit = msg.includes('429') || msg.includes('quota') || msg.includes('rate');
+          const isNoInstruction = msg.includes('Developer instruction is not enabled') || msg.includes('systemInstruction');
+          const isServerError = msg.includes('500') || msg.includes('503') || msg.includes('Internal Server Error');
+          
+          const shouldSkip = isRateLimit || isNoInstruction || isServerError;
+          console.warn(`⚠️ Chat model ${modelName} failed: ${shouldSkip ? 'Skipping to next' : 'Fatal'}, Error: ${msg}`);
+          
+          if (!shouldSkip) {
+            throw modelError; // Non-retryable errors should fail immediately
           }
           // Continue to next model
         }
@@ -497,9 +503,15 @@ Title:`;
         console.log(`✅ Generated title with ${modelName}:`, title);
         break;
       } catch (modelError) {
-        const isRateLimit = modelError.message?.includes('429') || modelError.message?.includes('quota');
-        console.warn(`⚠️ Title gen ${modelName} failed: ${isRateLimit ? 'Rate limited' : modelError.message}`);
-        if (!isRateLimit) break; // Non-rate-limit errors don't retry
+        const msg = modelError.message || '';
+        const isRateLimit = msg.includes('429') || msg.includes('quota') || msg.includes('rate');
+        const isNoInstruction = msg.includes('Developer instruction is not enabled') || msg.includes('systemInstruction');
+        const isServerError = msg.includes('500') || msg.includes('503') || msg.includes('Internal Server Error');
+        
+        const shouldSkip = isRateLimit || isNoInstruction || isServerError;
+        console.warn(`⚠️ Title gen ${modelName} failed: ${shouldSkip ? 'Skipping to next' : 'Fatal'}, Error: ${msg}`);
+        
+        if (!shouldSkip) break; // Non-retryable errors abort title gen fully
       }
     }
     

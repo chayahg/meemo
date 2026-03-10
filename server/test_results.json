@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/api/chat",
+    "status": 200,
+    "body": "{\"reply\":\"Hello there! It's lovely to chat with you today. How are you doing?\",\"correctedMessage\":\"h"
+  },
+  {
+    "path": "/api/learn/speaking-turn",
+    "status": 200,
+    "body": "{\"reply\":\"Hello to you too! Ready to learn today?\",\"romanization\":\"\",\"meaning\":\"\",\"corrections\":[],\""
+  },
+  {
+    "path": "/api/learn/speaking-summary",
+    "status": 200,
+    "body": "{\"summary\":\"This was a very brief introductory exchange where the user initiated the conversation wi"
+  },
+  {
+    "path": "/api/learn/story-feedback",
+    "status": 200,
+    "body": "{\"reply\":\"That's a good start to telling me about your weekend! Simple and clear – sometimes the sma"
+  },
+  {
+    "path": "/api/learn/fill-blanks/new",
+    "status": 200,
+    "body": "{\"exerciseId\":\"fill_1773160375324_6olutc767\",\"textWithBlanks\":\"My sister ___1___ a teacher and she _"
+  }
+]

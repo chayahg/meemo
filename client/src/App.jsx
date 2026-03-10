@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, Link } from 'react-router-dom';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { UserProvider, useUser } from './contexts/UserContext';
+import { ToastProvider, useToast } from './contexts/ToastContext';
 import { LANGUAGES, getLanguageByCode } from './config/languageConfig';
 import WelcomeLanguageModal from './components/WelcomeLanguageModal';
 import LandingPage from './pages/LandingPage';
@@ -16,7 +17,9 @@ function App() {
     <UserProvider>
       <SettingsProvider>
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <AppRoutes />
+          <ToastProvider>
+            <AppRoutes />
+          </ToastProvider>
         </Router>
       </SettingsProvider>
     </UserProvider>
@@ -26,6 +29,7 @@ function App() {
 function AppRoutes() {
   const navigate = useNavigate();
   const { user, logout, loading, switchLanguage, updateUserData } = useUser();
+  const { showToast } = useToast();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showLanguageSwitcher, setShowLanguageSwitcher] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
@@ -125,7 +129,7 @@ function AppRoutes() {
       console.log('Language switch successful');
     } catch (error) {
       console.error('Error in handleQuickLanguageSwitch:', error);
-      alert(`Failed to switch language: ${error.message}`);
+      showToast(`Failed to switch language: ${error.message}`, 'error');
     }
   };
 

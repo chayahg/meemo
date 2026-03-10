@@ -2,9 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { getLanguageByCode, getGeminiLanguage } from '../config/languageConfig.js';
 import './LearnPage.css';
+import { useToast } from '../contexts/ToastContext';
 
 function LearnPage() {
   const { user } = useUser();
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState('speak');
   const [showQuickTest, setShowQuickTest] = useState(false);
 
@@ -152,7 +154,7 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
           // Silently reset — user just didn't speak
           setCurrentTranscript('');
         } else if (event.error === 'network') {
-          alert('Network error. Please check your connection.');
+          showToast('Network error. Please check your connection.', 'error');
         }
       };
     }
@@ -247,7 +249,7 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
       setStoryPrompt(data.prompt);
     } catch (error) {
       console.error('Error:', error);
-      alert('Oops, Mee-Mo couldn\'t generate this. Try again.');
+      showToast('Oops, Mee-Mo couldn\'t generate this. Try again.', 'error');
     }
     setLoading(false);
   };
@@ -365,7 +367,7 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
       
     } catch (error) {
       console.error('Error:', error);
-      alert('Oops, Mee-Mo couldn\'t process that. Try again.');
+      showToast('Oops, Mee-Mo couldn\'t process that. Try again.', 'error');
       setLoading(false);
     }
   };
@@ -373,7 +375,7 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
   // End session and get comprehensive summary
   const endSession = async () => {
     if (conversationHistory.length === 0) {
-      alert('Start a conversation first!');
+      showToast('Start a conversation first!', 'warning');
       return;
     }
     
@@ -409,7 +411,7 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
       
     } catch (error) {
       console.error('Error:', error);
-      alert('Oops, Mee-Mo couldn\'t analyze the session. Try again.');
+      showToast('Oops, Mee-Mo couldn\'t analyze the session. Try again.', 'error');
     }
     
     setLoading(false);
@@ -837,7 +839,7 @@ function FillBlanksMode({ targetLanguage, langConfig }) {
       setUserAnswers(new Array(data.answers.length).fill(''));
     } catch (error) {
       console.error('Error:', error);
-      alert('Oops, Mee-Mo couldn\'t generate this. Try again.');
+      showToast('Oops, Mee-Mo couldn\'t generate this. Try again.', 'error');
     }
     setLoading(false);
   };
@@ -866,7 +868,7 @@ function FillBlanksMode({ targetLanguage, langConfig }) {
       setResult(data);
     } catch (error) {
       console.error('Error:', error);
-      alert('Oops, Mee-Mo couldn\'t check this. Try again.');
+      showToast('Oops, Mee-Mo couldn\'t check this. Try again.', 'error');
     }
     setLoading(false);
   };
@@ -892,7 +894,7 @@ function FillBlanksMode({ targetLanguage, langConfig }) {
       setUserAnswers(new Array(data.answers.length).fill(''));
     } catch (error) {
       console.error('Error:', error);
-      alert('Oops, Mee-Mo couldn\'t generate this. Try again.');
+      showToast('Oops, Mee-Mo couldn\'t generate this. Try again.', 'error');
     }
     setLoading(false);
   };
@@ -1113,7 +1115,7 @@ function QuickTestModal({ onClose, targetLanguage, langConfig }) {
       setUserAnswers(new Array(data.questions.length).fill(''));
     } catch (error) {
       console.error('Error:', error);
-      alert('Oops, Mee-Mo couldn\'t generate this. Try again.');
+      showToast('Oops, Mee-Mo couldn\'t generate this. Try again.', 'error');
       onClose();
     }
     setLoading(false);
@@ -1134,7 +1136,7 @@ function QuickTestModal({ onClose, targetLanguage, langConfig }) {
       setResults(data);
     } catch (error) {
       console.error('Error:', error);
-      alert('Oops, Mee-Mo couldn\'t check this. Try again.');
+      showToast('Oops, Mee-Mo couldn\'t check this. Try again.', 'error');
     }
     setLoading(false);
   };

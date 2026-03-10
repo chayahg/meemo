@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useUser } from '../contexts/UserContext';
+import { useToast } from '../contexts/ToastContext';
 import ChatSidebar from '../components/ChatSidebar';
 import ChatWindow from '../components/ChatWindow';
 import CorrectionPanel from '../components/CorrectionPanel';
@@ -54,6 +55,7 @@ const CHARACTERS = [
 
 function ChatPage() {
   const { user } = useUser();
+  const { showToast, showConfirm } = useToast();
   const [selectedCharacter, setSelectedCharacter] = useState(CHARACTERS[0]);
   const [characterSessions, setCharacterSessions] = useState({}); // { mentor: [...sessions], vibe: [...sessions], ... }
   const [currentSessionId, _setCurrentSessionId] = useState(null);
@@ -723,7 +725,7 @@ function ChatPage() {
       }));
     } catch (error) {
       console.error('Error renaming session:', error);
-      alert('Failed to rename chat. Please try again.');
+      showToast('Failed to rename chat. Please try again.', 'error');
     }
   };
 
@@ -732,29 +734,29 @@ function ChatPage() {
     const userId = user?.uid;
     if (!userId) return;
 
-    const confirmed = window.confirm('Are you sure you want to delete this chat? This cannot be undone.');
-    if (!confirmed) return;
+    showConfirm('Are you sure you want to delete this chat? This cannot be undone.', async () => {
+      try {
+        // Delete from Firestore
+        const sessionRef = doc(db, 'users', userId, 'characters', characterId, 'sessions', sessionId);
+        await deleteDoc(sessionRef);
+        
+        // Update local state
+        setCharacterSessions(prev => ({
+          ...prev,
+          [characterId]: prev[characterId].filter(s => s.id !== sessionId)
+        }));
 
-    try {
-      // Delete from Firestore
-      const sessionRef = doc(db, 'users', userId, 'characters', characterId, 'sessions', sessionId);
-      await deleteDoc(sessionRef);
-      
-      // Update local state
-      setCharacterSessions(prev => ({
-        ...prev,
-        [characterId]: prev[characterId].filter(s => s.id !== sessionId)
-      }));
-
-      // If this was the current session, clear it
-      if (currentSessionId === sessionId) {
-        setCurrentSessionId(null);
-        initializeNewChat(characterId);
+        // If this was the current session, clear it
+        if (currentSessionId === sessionId) {
+          setCurrentSessionId(null);
+          initializeNewChat(characterId);
+        }
+        showToast('Chat deleted successfully!', 'success');
+      } catch (error) {
+        console.error('Error deleting session:', error);
+        showToast('Failed to delete chat. Please try again.', 'error');
       }
-    } catch (error) {
-      console.error('Error deleting session:', error);
-      alert('Failed to delete chat. Please try again.');
-    }
+    });
   };
 
   // Share session
@@ -767,7 +769,7 @@ function ChatPage() {
       const session = characterSessions[characterId]?.find(s => s.id === sessionId);
       
       if (!msgs || msgs.length === 0) {
-        alert('This chat is empty and cannot be shared.');
+        showToast('This chat is empty and cannot be shared.', 'error');
         return;
       }
 
@@ -786,10 +788,10 @@ function ChatPage() {
 
       // Copy to clipboard
       await navigator.clipboard.writeText(conversationText);
-      alert('Conversation copied to clipboard! You can now paste and share it.');
+      showToast('Conversation copied to clipboard! You can now paste and share it.', 'success');
     } catch (error) {
       console.error('Error sharing session:', error);
-      alert('Failed to share chat. Please try again.');
+      showToast('Failed to share chat. Please try again.', 'error');
     }
   };
 
@@ -1225,12 +1227,12 @@ function ChatPage() {
   };
 
   const handleSTT = () => {
-    if (!recognitionSupported) {
-      alert('Speech recognition is not supported in your browser.');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      showToast('Speech recognition is not supported in your browser.', 'error');
       return;
     }
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     
     recognition.lang = 'en-US';
@@ -1251,7 +1253,7 @@ function ChatPage() {
       console.error('Speech recognition error:', event.error);
       setIsListening(false);
       if (event.error !== 'no-speech' && event.error !== 'aborted') {
-        alert('Speech recognition error: ' + event.error);
+        showToast('Speech recognition error: ' + event.error, 'error');
       }
     };
 

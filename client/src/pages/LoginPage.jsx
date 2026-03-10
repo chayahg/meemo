@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswor
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { useUser } from '../contexts/UserContext'
+import { useToast } from '../contexts/ToastContext'
 import TermsModal from '../components/TermsModal'
 import '../App.css'
 import './LandingPage.css'
@@ -11,6 +12,7 @@ import './LandingPage.css'
 function LoginPage() {
   const navigate = useNavigate();
   const { setUser } = useUser();
+  const { showToast } = useToast();
 
   // Force dark theme on login page
   useEffect(() => {
@@ -94,7 +96,7 @@ function LoginPage() {
 
     try {
       await sendPasswordResetEmail(auth, email);
-      alert('Password reset email sent! Please check your inbox (and spam folder).');
+      showToast('Password reset email sent! Please check your inbox (and spam folder).', 'success');
     } catch (error) {
       console.error('Password reset error:', error);
       if (error.code === 'auth/user-not-found') {
@@ -153,7 +155,7 @@ function LoginPage() {
       // Set email for login form
       setEmail(signupEmail);
       
-      alert('Account created successfully! Please log in.');
+      showToast('Account created successfully! Please log in.', 'success');
     } catch (error) {
       console.error('Signup error:', error);
       
