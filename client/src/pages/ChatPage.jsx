@@ -113,14 +113,14 @@ function ChatPage() {
       ) || voices[1] || voices[0]
     },
     bro: {
-      rate: 1.08,      // Energetic, faster pace
-      pitch: 1.05,     // Slightly higher, friendly tone
+      rate: 0.85,      // Totally relaxed, slower pace for maximum chill
+      pitch: 0.90,     // Slightly deeper, "dude" tone
       volume: 1.0,
       voiceFilter: (voices) => voices.find(v => 
         v.name.includes('James') ||
         v.name.includes('Alex') ||
         (v.name.toLowerCase().includes('male') && !v.name.toLowerCase().includes('female'))
-      ) || voices[2] || voices[0]
+      ) || voices[0]
     },
     luna: {
       rate: 0.93,      // Gentle, medium pace
@@ -1157,7 +1157,9 @@ function ChatPage() {
       return;
     }
 
-    const utterance = new SpeechSynthesisUtterance(text);
+    // Strip emojis so the speech engine skips them
+    const cleanText = text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '');
+    const utterance = new SpeechSynthesisUtterance(cleanText);
     
     // Set the language for the utterance based on target language
     const targetLangCode = user?.profile?.targetLanguage || 'english';
@@ -1370,7 +1372,9 @@ function ChatPage() {
     window.speechSynthesis.cancel();
     setSpeakingMessageId(message.id);
 
-    const utterance = new SpeechSynthesisUtterance(message.text);
+    // Strip emojis so the speech engine skips them
+    const cleanText = message.text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '');
+    const utterance = new SpeechSynthesisUtterance(cleanText);
     
     // Select voice based on message sender
     if (message.sender === 'user') {
@@ -1449,7 +1453,7 @@ function ChatPage() {
           onClick={() => setIsCorrectionPanelOpen(!isCorrectionPanelOpen)}
           aria-label="Toggle corrections"
         >
-          {isCorrectionPanelOpen ? '✕' : '✨'}
+          {isCorrectionPanelOpen ? '✕' : '📖'}
         </button>
 
         <ChatSidebar

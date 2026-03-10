@@ -471,11 +471,13 @@ Analyze the ENTIRE session and provide feedback in STRICT JSON format:
 
 2. "strengths": Array of 2-3 specific things they did well (grammar, vocabulary, fluency, topic development) in ${langLabel}
 
-3. "improvements": Array of 2-3 specific areas to work on in ${langLabel}, with grammar rule names when applicable
+3. "improvements": Array of 2-3 specific areas to work on in ${langLabel}. **CRUCIAL:** You MUST explicitly state the exact grammar mistakes they made (e.g., "You said X, but you should have replied with Y because of Z"). Give them exact alternative sentences they should have used!
 
 4. "suggestedNextFocus": One clear suggestion for what to practice next time in ${langLabel}
 
-5. "confidenceScore": Number from 0-100 representing their overall speaking confidence and ability in this session
+5. "toneAnalysis": Short 1 sentence feedback evaluating their conversational TONE (e.g., were they polite? casual? awkward? confident?).
+
+6. "confidenceScore": Number from 0-100 representing their overall speaking confidence and ability in this session
 
 Return ONLY valid JSON, no markdown:
 {
@@ -483,6 +485,7 @@ Return ONLY valid JSON, no markdown:
   "strengths": ["...", "..."],
   "improvements": ["...", "..."],
   "suggestedNextFocus": "...",
+  "toneAnalysis": "...",
   "confidenceScore": 0
 }`;
 
@@ -503,6 +506,7 @@ Return ONLY valid JSON, no markdown:
       strengths: parsedResponse.strengths || ["Good effort"],
       improvements: parsedResponse.improvements || ["Keep practicing"],
       suggestedNextFocus: parsedResponse.suggestedNextFocus || "Continue practicing regularly",
+      toneAnalysis: parsedResponse.toneAnalysis || "Your tone was friendly and engaged.",
       confidenceScore: parsedResponse.confidenceScore || 70
     });
 

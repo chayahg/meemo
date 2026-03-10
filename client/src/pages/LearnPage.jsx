@@ -209,7 +209,9 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
     
     window.speechSynthesis.cancel(); // Stop any ongoing speech
     
-    const utterance = new SpeechSynthesisUtterance(text);
+    // Strip emojis so the TTS engine doesn't read them out loud
+    const cleanText = text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '');
+    const utterance = new SpeechSynthesisUtterance(cleanText);
     const characterVoice = characterVoices[charId];
     
     if (characterVoice) {
@@ -680,8 +682,8 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
               </div>
             )}
 
-            {/* Corrections Section - Only visible during live speaking, NOT after session ends */}
-            {!sessionSummary && allCorrections.length > 0 && (
+            {/* Corrections Section - Visible during and after session */}
+            {allCorrections.length > 0 && (
               <div className="corrections-panel">
                 <h4>✏️ Corrections</h4>
                 <div className="corrections-panel-list">
@@ -689,7 +691,7 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
                     <div key={idx} className="correction-panel-item">
                       <div className="correction-panel-label">You said:</div>
                       <div className="correction-panel-original">{correction.original}</div>
-                      <div className="correction-panel-label">Better:</div>
+                      <div className="correction-panel-label">Better & Why:</div>
                       <div className="correction-panel-corrected">{correction.corrected}</div>
                       <div className="correction-panel-explanation">{correction.explanation}</div>
                     </div>
@@ -716,13 +718,20 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
                 </div>
                 
                 <div className="summary-section">
-                  <h4>💡 Areas to Improve</h4>
+                  <h4>💡 Areas to Improve & Better Replies</h4>
                   <ul>
                     {sessionSummary.improvements.map((i, idx) => (
                       <li key={idx}>• {i}</li>
                     ))}
                   </ul>
                 </div>
+                
+                {sessionSummary.toneAnalysis && (
+                  <div className="summary-section">
+                    <h4>🎭 Tone Analysis</h4>
+                    <p>{sessionSummary.toneAnalysis}</p>
+                  </div>
+                )}
                 
                 <div className="summary-section">
                   <h4>🎯 Next Focus</h4>
@@ -733,22 +742,41 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
                   <strong>Confidence today:</strong> {sessionSummary.confidenceScore}/100
                 </div>
                 
-                {/* Start New Conversation Button */}
-                <button
-                  className="btn-new-conversation"
-                  onClick={() => {
-                    setSessionSummary(null);
-                    setConversationHistory([]);
-                    setStoryPrompt('');
-                    setCurrentTranscript('');
-                    setSpeakingFeedback(null);
-                    setIsAnalyzed(false);
-                    setAllCorrections([]);
-                    setLastTurnFeedback(null);
-                  }}
-                >
-                  Start New Conversation
-                </button>
+                <div className="summary-actions-row" style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
+                  {/* Continue Chat Button */}
+                  <button
+                    className="btn-continue-chat"
+                    onClick={() => {
+                      // Just clear the summary views to return to chat state
+                      setSessionSummary(null);
+                      setIsAnalyzed(false);
+                      setSpeakingFeedback(null);
+                      setLastTurnFeedback(null);
+                      // Do NOT clear conversationHistory, storyPrompt, or allCorrections
+                    }}
+                    style={{ flex: 1, padding: '12px', background: 'var(--bg-card-hover)', border: '1px solid var(--border)', borderRadius: '12px', color: 'var(--text-primary)', cursor: 'pointer', fontWeight: 'bold' }}
+                  >
+                    Continue Chat
+                  </button>
+                  
+                  {/* Start New Conversation Button */}
+                  <button
+                    className="btn-new-conversation"
+                    onClick={() => {
+                      setSessionSummary(null);
+                      setConversationHistory([]);
+                      setStoryPrompt('');
+                      setCurrentTranscript('');
+                      setSpeakingFeedback(null);
+                      setIsAnalyzed(false);
+                      setAllCorrections([]);
+                      setLastTurnFeedback(null);
+                    }}
+                    style={{ flex: 1 }}
+                  >
+                    New Chat
+                  </button>
+                </div>
               </>
             )}
           </div>
