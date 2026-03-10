@@ -152,7 +152,7 @@ html {
 
   /* Bubble styles */
   --bubble-ai-bg: rgba(255, 255, 255, 0.88);
-  --bubble-user-bg: linear-gradient(135deg, #a855f7, rgba(34, 211, 238, 0.9));
+  --bubble-user-bg: linear-gradient(135deg, #a855f7, #22d3ee);
   --bubble-user-text: #FFFFFF;
   --bubble-text: #1e293b;
   --bubble-time: #64748b;
