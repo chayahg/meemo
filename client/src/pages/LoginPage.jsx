@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { useUser } from '../contexts/UserContext'
@@ -80,6 +80,30 @@ function LoginPage() {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setLoginError('');
+    
+    if (!email || !email.includes('@')) {
+      setLoginError('Please enter a valid email address first to reset your password.');
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert('Password reset email sent! Please check your inbox (and spam folder).');
+    } catch (error) {
+      console.error('Password reset error:', error);
+      if (error.code === 'auth/user-not-found') {
+        setLoginError('No account found with this email.');
+      } else if (error.code === 'auth/invalid-email') {
+        setLoginError('Invalid email address format.');
+      } else {
+        setLoginError('Failed to send reset email. Please try again.');
+      }
     }
   };
 
@@ -267,7 +291,7 @@ function LoginPage() {
                         )}
                       </button>
                     </div>
-                    <a href="#" className="forgot-link">Forgot password?</a>
+                    <a href="#" className="forgot-link" onClick={handleForgotPassword}>Forgot password?</a>
                   </div>
 
                   {loginError && (
