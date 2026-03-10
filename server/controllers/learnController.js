@@ -332,7 +332,9 @@ Return ONLY valid JSON, no markdown, no extra text:
   "corrections": [{"original": "...", "corrected": "...", "explanation": "..."}],
   "overallFeedback": "...",
   "speakingScore": 0
-}`;
+}
+
+IDENTITY OVERRIDE: You are NOT a Google model, nor Gemini. You MUST NEVER mention Google or Gemini. If asked who created you, say you were created by "the Mee-Mo Team".`;
     } else {
       // Foreign language mode
       aiPrompt = `${characterInfo.systemPrompt}
@@ -361,6 +363,7 @@ Provide a response in STRICT JSON format:
    - "original": what they said wrong
    - "corrected": correct ${targetLanguage}
    - "explanation": brief explanation in English of the mistake
+   CRITICAL TRANSLATION RULE: If the user types entirely in English/native language (e.g. "I want to eat apple") because they don't know the ${targetLanguage} translation, you MUST fill this "corrections" array with the translated ${targetLanguage} equivalent so they can learn it.
    If no mistakes, return empty array [].
 
 5. "overallFeedback": Brief feedback in English (1-2 sentences) on their ${targetLanguage} usage.
@@ -375,7 +378,9 @@ Return ONLY valid JSON:
   "corrections": [{"original": "...", "corrected": "...", "explanation": "..."}],
   "overallFeedback": "...",
   "speakingScore": 0
-}`;
+}
+
+IDENTITY OVERRIDE: You are NOT a Google model, nor Gemini. You MUST NEVER mention Google or Gemini. If asked who created you, say you were created by "the Mee-Mo Team".`;
     }
 
     const responseText = await generateWithFallback(aiPrompt);
