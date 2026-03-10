@@ -399,7 +399,7 @@ function ChatPage() {
                 mistakes: msg.mistakes || [],
                 hadChanges: !!msg.correctedText,
                 timestamp: msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
-                timestampMs: msg.createdAt?.getTime ? msg.createdAt.getTime() : Date.now(),
+                timestampMs: msg.createdAt instanceof Date ? msg.createdAt.getTime() : (msg.createdAt?.getTime ? msg.createdAt.getTime() : Date.now()),
                 // Restore teaching data
                 isTeachingMode: !!(msg.teachingData),
                 romanization: msg.teachingData?.romanization || '',
@@ -620,7 +620,7 @@ function ChatPage() {
           mistakes: msg.mistakes || [],
           hadChanges: !!msg.correctedText,
           timestamp: msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
-          timestampMs: msg.createdAt?.getTime ? msg.createdAt.getTime() : Date.now(),
+          timestampMs: msg.createdAt instanceof Date ? msg.createdAt.getTime() : (msg.createdAt?.getTime ? msg.createdAt.getTime() : Date.now()),
           // Restore teaching data for proper bubble display
           isTeachingMode: !!(msg.teachingData),
           romanization: msg.teachingData?.romanization || '',

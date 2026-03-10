@@ -111,7 +111,15 @@ export const loadSessionMessages = async ({ userId, characterId, sessionId }) =>
     }
     
     const data = sessionDoc.data();
-    return data.messages || [];
+    if (!data.messages) return [];
+    
+    // Convert Firestore Timestamp objects to JS Dates
+    return data.messages.map(msg => ({
+      ...msg,
+      createdAt: msg.createdAt?.toDate ? msg.createdAt.toDate() : 
+                 msg.createdAt instanceof Date ? msg.createdAt :
+                 msg.createdAt ? new Date(msg.createdAt) : new Date()
+    }));
   } catch (error) {
     console.error('Error loading session messages:', error);
     return [];
