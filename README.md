@@ -102,7 +102,7 @@ npm run dev
 cd client
 npm run dev
 ```
-Open https://meemo-live.vercel.app.app in your browser!
+Open https://meemo-live.vercel.app in your browser!
 
 ---
 
