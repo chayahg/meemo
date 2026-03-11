@@ -23,7 +23,8 @@ function ChatWindow({
   onPlayMessageTTS,
   speakingMessageId,
   isMuted,
-  onToggleMute
+  onToggleMute,
+  isTyping
 }) {
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef(null);
@@ -118,6 +119,19 @@ function ChatWindow({
             isSpeaking={speakingMessageId === message.id}
           />
         ))}
+        {isTyping && (
+          <div className="message-container">
+            <div className="message-bubble meemo-message" style={{ padding: 0, background: 'transparent', boxShadow: 'none' }}>
+              <div className="message-content">
+                <div className="typing-indicator">
+                  <span className="typing-dot"></span>
+                  <span className="typing-dot"></span>
+                  <span className="typing-dot"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
