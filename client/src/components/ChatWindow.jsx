@@ -19,7 +19,6 @@ function ChatWindow({
   speechSynthesisSupported,
   onReplayAudio,
   selectedMessageId,
-  onSelectMessage,
   onPlayMessageTTS,
   speakingMessageId,
   isMuted,
@@ -120,14 +119,19 @@ function ChatWindow({
           />
         ))}
         {isTyping && (
-          <div className="message-container">
-            <div className="message-bubble meemo-message" style={{ padding: 0, background: 'transparent', boxShadow: 'none' }}>
-              <div className="message-content">
-                <div className="typing-indicator">
-                  <span className="typing-dot"></span>
-                  <span className="typing-dot"></span>
-                  <span className="typing-dot"></span>
-                </div>
+          <div className={`message-bubble meemo typing-bubble`} style={{ '--accent-color': character.accentColor }}>
+            <div className="avatar-wrapper hide-on-mobile">
+              <img 
+                src={character.avatar} 
+                alt={character.name}
+                className="message-avatar"
+              />
+            </div>
+            <div className="message-content">
+              <div className="message-text typing-indicator">
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
               </div>
             </div>
           </div>

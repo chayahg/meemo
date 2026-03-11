@@ -815,8 +815,9 @@ function ChatPage() {
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
 
+    setIsTyping(true);
+
     try {
-      setIsTyping(true);
       // Use ref values — these are always current even inside async continuations
       const userId = userRef.current?.uid;
 

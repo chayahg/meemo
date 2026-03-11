@@ -533,13 +533,11 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
               ))}
               {loading && (
                 <div className="speak-chat-row speak-chat-meemo">
-                  <div className="speak-bubble speak-bubble-meemo" style={{ padding: '8px 16px', background: 'transparent', boxShadow: 'none' }}>
-                    <div className="speak-bubble-text">
-                      <div className="typing-indicator" style={{ background: 'transparent', margin: 0, padding: 0, boxShadow: 'none' }}>
-                        <span className="typing-dot" style={{ backgroundColor: 'var(--text-secondary)' }}></span>
-                        <span className="typing-dot" style={{ backgroundColor: 'var(--text-secondary)' }}></span>
-                        <span className="typing-dot" style={{ backgroundColor: 'var(--text-secondary)' }}></span>
-                      </div>
+                  <div className="speak-bubble typing-bubble">
+                    <div className="typing-indicator">
+                      <span className="dot"></span>
+                      <span className="dot"></span>
+                      <span className="dot"></span>
                     </div>
                   </div>
                 </div>

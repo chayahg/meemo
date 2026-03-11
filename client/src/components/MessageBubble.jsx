@@ -2,8 +2,8 @@ function MessageBubble({ message, showCorrections, accentColor, isSelected, onSe
   const isUser = message.sender === 'user';
   const hasCorrection = isUser && message.hadChanges && message.corrected;
   const isTeachingBubble = !isUser && message.isTeachingMode;
-  const hasEnglishCorrection = isUser && message.englishCorrection && message.englishCorrection.corrected && message.englishCorrection.corrected.trim() !== '';
-  const hasTargetLangCorrection = isUser && message.targetLangCorrection && message.targetLangCorrection.corrected && message.targetLangCorrection.corrected.trim() !== '';
+  const hasEnglishCorrection = isUser && message.englishCorrection;
+  const hasTargetLangCorrection = isUser && message.targetLangCorrection;
 
   const handleBubbleClick = () => {
     onSelect(message.id);
