@@ -59,9 +59,8 @@ const generateWithFallback = async (prompt, options = {}) => {
         lastError = err;
         const isRateLimit = err.message?.includes('429') || err.message?.includes('quota') || err.message?.includes('rate');
         const isNoInstruction = err.message?.includes('Developer instruction is not enabled') || err.message?.includes('systemInstruction');
-        const shouldSkip = isRateLimit || isNoInstruction;
-        console.warn(`⚠️ Learn model ${modelName} failed: ${isRateLimit ? 'Rate limited' : isNoInstruction ? 'No system instruction support' : err.message}`);
-        if (!shouldSkip) throw err;
+        console.warn(`⚠️ Learn model ${modelName} failed. Error: ${err.message}`);
+        // Skip to next model automatically
       }
     }
     return { failed: true, lastError };

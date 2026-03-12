@@ -298,12 +298,10 @@ Respond with JSON only:`;
           const isNoInstruction = msg.includes('Developer instruction is not enabled') || msg.includes('systemInstruction');
           const isServerError = msg.includes('500') || msg.includes('503') || msg.includes('Internal Server Error');
           
-          const shouldSkip = isRateLimit || isNoInstruction || isServerError;
-          console.warn(`⚠️ Chat model ${modelName} failed: ${shouldSkip ? 'Skipping to next' : 'Fatal'}, Error: ${msg}`);
+          console.warn(`⚠️ Chat model ${modelName} failed. RateLimit=${isRateLimit}, Error: ${msg}`);
           
-          if (!shouldSkip) {
-            throw modelError; // Non-retryable errors should fail immediately
-          }
+          // Always try the next model on ANY error to maximize resilience
+          // If all fail, the outer scope will throw the last error
           // Continue to next model
         }
       }
@@ -519,10 +517,9 @@ Title:`;
         const isNoInstruction = msg.includes('Developer instruction is not enabled') || msg.includes('systemInstruction');
         const isServerError = msg.includes('500') || msg.includes('503') || msg.includes('Internal Server Error');
         
-        const shouldSkip = isRateLimit || isNoInstruction || isServerError;
-        console.warn(`⚠️ Title gen ${modelName} failed: ${shouldSkip ? 'Skipping to next' : 'Fatal'}, Error: ${msg}`);
+        console.warn(`⚠️ Title gen ${modelName} failed. Error: ${msg}`);
         
-        if (!shouldSkip) break; // Non-retryable errors abort title gen fully
+        // Always continue to next model on ANY error
       }
     }
     

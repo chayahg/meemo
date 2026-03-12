@@ -531,17 +531,6 @@ function SpeakStoryMode({ targetLanguage, langConfig }) {
                   </div>
                 </div>
               ))}
-              {loading && (
-                <div className="speak-chat-row speak-chat-meemo">
-                  <div className="speak-bubble typing-bubble">
-                    <div className="typing-indicator">
-                      <span className="dot"></span>
-                      <span className="dot"></span>
-                      <span className="dot"></span>
-                    </div>
-                  </div>
-                </div>
-              )}
               <div ref={lastMessageRef} />
             </>
           )}

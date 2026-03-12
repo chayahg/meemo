@@ -79,7 +79,6 @@ function ChatPage() {
   const [isMuted, setIsMuted] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
   const skipNextAutoLoadRef = useRef(false); // Prevents useEffect from overriding handleNewChat
 
   // Refs that ALWAYS hold the latest values — updated SYNCHRONOUSLY so async
@@ -815,8 +814,6 @@ function ChatPage() {
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
 
-    setIsTyping(true);
-
     try {
       // Use ref values — these are always current even inside async continuations
       const userId = userRef.current?.uid;
@@ -1146,8 +1143,6 @@ function ChatPage() {
       const errorMessages = [...updatedMessages, errorMessage];
       setMessages(errorMessages);
       // Note: error messages are shown in UI but not persisted to Firestore
-    } finally {
-      setIsTyping(false);
     }
   };
 
@@ -1501,7 +1496,6 @@ function ChatPage() {
           speakingMessageId={speakingMessageId}
           isMuted={isMuted}
           onToggleMute={toggleMute}
-          isTyping={isTyping}
         />
 
         <CorrectionPanel
