@@ -96,7 +96,7 @@ function ChatPage() {
   const CHARACTER_VOICE_PRESETS = {
     mentor: {
       rate: 0.95,      // Calm, measured pace
-      pitch: 1.0,      // Neutral, clear tone
+      pitch: 0.85,     // Deeper, clear tone
       volume: 1.0,
       voiceFilter: (voices) => voices.find(v => 
         v.name.includes('David') || 
@@ -106,7 +106,7 @@ function ChatPage() {
     },
     vibe: {
       rate: 0.88,      // Relaxed, slower pace
-      pitch: 0.95,     // Slightly lower, laid-back tone
+      pitch: 0.80,     // Deep, laid-back tone
       volume: 0.95,
       voiceFilter: (voices) => voices.find(v => 
         v.name.includes('Mark') ||
@@ -116,7 +116,7 @@ function ChatPage() {
     },
     bro: {
       rate: 0.85,      // Totally relaxed, slower pace for maximum chill
-      pitch: 0.90,     // Slightly deeper, "dude" tone
+      pitch: 0.75,     // Very deep, "dude" tone
       volume: 1.0,
       voiceFilter: (voices) => voices.find(v => 
         v.name.includes('James') ||
@@ -178,25 +178,26 @@ function ChatPage() {
   const initializeCharacterVoices = (availableVoices) => {
     if (availableVoices.length === 0) return {};
 
-    // Get the target language speech code
+    // Get the target language speech code from the user's profile
     const targetLangCode = user?.profile?.targetLanguage || 'english';
     const langConfig = getLanguageByCode(targetLangCode);
     const isEnglish = targetLangCode === 'english';
 
-    // For English: use English voices with character personality presets
-    // For foreign languages: find voices matching the target language
-    let voicesToUse;
-    if (isEnglish) {
-      const englishVoices = availableVoices.filter(v => v.lang.startsWith('en'));
-      voicesToUse = englishVoices.length > 0 ? englishVoices : availableVoices;
-    } else {
-      // Find voices for the target language
-      const targetVoices = availableVoices.filter(v => langConfig.voiceFilter(v));
-      voicesToUse = targetVoices.length > 0 ? targetVoices : availableVoices;
+    // Find all voices that match the selected language (e.g., 'en-US', 'en-GB' for 'en')
+    const sourceVoices = availableVoices.filter(v => langConfig.voiceFilter(v));
+
+    // If no voices are found for the target language, we can't assign specific voices.
+    // The browser will use its default for that language.
+    if (sourceVoices.length === 0) {
+      const voiceMap = {};
+      Object.keys(CHARACTER_VOICE_PRESETS).forEach((charId) => {
+        voiceMap[charId] = null; // No specific voice found
+        console.log(`🎤 ${charId} voice: none found for ${targetLangCode}, using browser default.`);
+      });
+      return voiceMap;
     }
 
-    // Apply voice filter from each character's preset
-    const voiceMap = {};
+    // --- Voice Assignment Logic ---
 
     // Known female voice names across languages (Microsoft Online Natural voices)
     const KNOWN_FEMALE_VOICES = [
@@ -229,41 +230,56 @@ function ChatPage() {
     // Helper: check if a voice is likely female
     const isFemaleVoice = (voice) => {
       const name = voice.name;
-      // Check against known female names
       if (KNOWN_FEMALE_VOICES.some(fn => name.includes(fn))) return true;
-      // Check for gender keywords in the voice name
       if (name.toLowerCase().includes('female')) return true;
-      // Exclude known male names to narrow it down
       const knownMale = ['David', 'Daniel', 'Mark', 'James', 'Alex', 'Ryan', 'George',
         'Sean', 'Ravi', 'Richard', 'Guy', 'Roger', 'Fred', 'Keita', 'Ichiro',
         'Naoki', 'InJoon', 'Alvaro', 'Pablo', 'Henri', 'Conrad', 'Diego',
         'Rafael', 'Yunxi', 'Yunjian', 'Google Male', 'Google UK English Male'];
       if (knownMale.some(mn => name.includes(mn))) return false;
-      // Unknown — can't tell
-      return null;
+      return null; // Unknown
     };
 
-    Object.keys(CHARACTER_VOICE_PRESETS).forEach(charId => {
-      const preset = CHARACTER_VOICE_PRESETS[charId];
-      if (!isEnglish) {
-        // Filter voices that actually match the target language
-        const targetVoices = availableVoices.filter(v => langConfig.voiceFilter(v));
-        if (targetVoices.length === 0) {
-          // No target-language voices installed — let browser auto-select
-          voiceMap[charId] = null;
-        } else if (charId === 'luna') {
-          // Luna = girl character → ALWAYS pick a female voice
-          const femaleVoice = targetVoices.find(v => isFemaleVoice(v) === true);
-          // If no confirmed female, pick one that's at least NOT confirmed male
-          const notMaleVoice = femaleVoice || targetVoices.find(v => isFemaleVoice(v) !== false);
-          voiceMap[charId] = notMaleVoice || targetVoices[0];
-        } else {
-          voiceMap[charId] = targetVoices[0];
-        }
-      } else {
-        voiceMap[charId] = preset.voiceFilter(voicesToUse);
+    const voiceMap = {};
+    const usedVoiceNames = new Set();
+    const pickUnused = (pool) => pool.find(v => !usedVoiceNames.has(v.name));
+
+    const femalePool = sourceVoices.filter(v => isFemaleVoice(v) === true);
+    const notMalePool = sourceVoices.filter(v => isFemaleVoice(v) !== false); // Female or unknown
+    const explicitMalePool = sourceVoices.filter(v => isFemaleVoice(v) === false); // Strictly male
+    const unknownPool = sourceVoices.filter(v => isFemaleVoice(v) === null); // Unknown (often default female)
+
+    // --- Assign Voices ---
+
+    // 1. Luna: female-preferred voice first.
+    const lunaVoice = pickUnused(femalePool)
+      || pickUnused(notMalePool)
+      || pickUnused(sourceVoices) // Fallback to any unused voice in the language
+      || sourceVoices[0];        // Absolute fallback to the first available voice
+    
+    if (lunaVoice) {
+      voiceMap.luna = lunaVoice;
+      usedVoiceNames.add(lunaVoice.name);
+    }
+
+    // 2. Male characters: Must sound masculine. Prioritize explicitly known male voices!
+    const maleCharacters = ['mentor', 'vibe', 'bro'];
+    maleCharacters.forEach((charId) => {
+      const selectedVoice = pickUnused(explicitMalePool)
+        || pickUnused(unknownPool) // If no explicit male left, try an unknown one (might be default)
+        || explicitMalePool[0]    // Fallback to a (possibly reused) explicit male voice
+        || sourceVoices[0];       // Absolute fallback
+      
+      if (selectedVoice) {
+        voiceMap[charId] = selectedVoice;
+        usedVoiceNames.add(selectedVoice.name);
       }
-      console.log(`🎤 ${charId} voice: ${voiceMap[charId]?.name || 'none (browser auto)'} (${voiceMap[charId]?.lang || 'unknown'})`);
+    });
+
+    // Log the results for debugging
+    Object.keys(CHARACTER_VOICE_PRESETS).forEach((charId) => {
+      const voice = voiceMap[charId];
+      console.log(`🎤 ${charId} voice set to: ${voice?.name || 'none (browser default)'} (${voice?.lang || 'unknown'})`);
     });
 
     return voiceMap;
@@ -813,6 +829,7 @@ function ChatPage() {
     
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
+    setLoadingMessages(true);
 
     try {
       // Use ref values — these are always current even inside async continuations
@@ -1100,7 +1117,7 @@ function ChatPage() {
         // Replace entirely — only show data for the current message
         setCorrections([teachingCard]);
       } else if (data.mistakes && data.mistakes.length > 0) {
-        // English mode: show grammar corrections
+        // English mode: show grammar corrections (only the latest one)
         const newCorrection = {
           id: `msg-${Date.now()}`,
           original: text,
@@ -1112,24 +1129,27 @@ function ChatPage() {
             explanation: mistake.explanation
           }))
         };
-        setCorrections(prev => [newCorrection, ...prev].slice(0, 10));
+        setCorrections([newCorrection]);
       } else if (data.hadChanges === false && messages.some(m => m.sender === 'user')) {
-        // Show positive feedback if no mistakes
+        // Show positive feedback if no mistakes (only the latest one)
         setCorrections([{
           id: 'perfect-' + Date.now(),
           original: '',
           corrected: '',
           explanation: 'Looks great – no corrections needed!',
           isPerfect: true
-        }, ...corrections.filter(c => !c.isPerfect)]);
+        }]);
       }
 
       // Auto-play character's voice (unless muted)
       if (!isMuted && speechSynthesisSupported && data.reply) {
         playCharacterVoice(selectedCharacter.id, data.reply, meeMoMessageId);
       }
+      
+      setLoadingMessages(false);
 
     } catch (error) {
+      setLoadingMessages(false);
       console.error('Error sending message:', error);
       // Show error message
       const errorMessage = {
@@ -1235,7 +1255,18 @@ function ChatPage() {
 
     const recognition = new SpeechRecognition();
     
-    recognition.lang = 'en-US';
+    // Determine the best language code for speech recognition
+    const targetLangCode = user?.profile?.targetLanguage || 'english';
+    const recogPreference = user?.settings?.recognitionLanguage || 'Native + English';
+    
+    if (recogPreference === 'English only') {
+      recognition.lang = 'en-US';
+    } else {
+      // Use the target language's speech code (e.g. ko-KR, ja-JP)
+      const speechCode = getSpeechCode(targetLangCode);
+      recognition.lang = speechCode;
+    }
+    
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
@@ -1296,66 +1327,122 @@ function ChatPage() {
     const isTeaching = targetLangCode !== 'english';
     const targetLangName = getGeminiLanguage(targetLangCode);
     
+    // Determine if the clicked message is from a teaching session or an English session.
+    // We check this per-message, so you can click an English message while in Korean mode and vice versa.
+    let isTeachingMsg = false;
+    let fallbackTargetLang = targetLangName;
+    
+    // First try to detect from the message itself
     if (clickedMsg.sender === 'meemo' && clickedMsg.isTeachingMode) {
-      // Clicked an AI teaching message - show its teaching data in panel
-      const teachingCard = {
-        id: `click-teach-${messageId}`,
-        isVocabulary: true,
-        targetLanguage: targetLangName || '',
-        usage: clickedMsg.usage || '',
-        formalForm: clickedMsg.formalForm || '',
-        informalForm: clickedMsg.informalForm || '',
-        alternatives: clickedMsg.alternatives || '',
-        culturalNote: clickedMsg.culturalNote || '',
-        targetLangCorrection: clickedMsg.targetLangCorrection || null,
-        vocabulary: (clickedMsg.vocabulary || []).map((v, i) => ({
-          id: `click-${i}`,
-          word: v.word,
-          romanization: v.romanization,
-          meaning: v.meaning
-        }))
-      };
-      setCorrections([teachingCard]);
-    } else if (clickedMsg.sender === 'user') {
-      // Clicked a user message - show its correction data
-      if (isTeaching && (clickedMsg.englishCorrection || clickedMsg.targetLangCorrection)) {
-        // Find the AI response right after this user message
+        isTeachingMsg = true;
+    } else if (clickedMsg.sender === 'user' && (clickedMsg.englishCorrection || clickedMsg.targetLangCorrection)) {
+        isTeachingMsg = true;
+    } else if (clickedMsg.sender === 'user' && clickedMsg.mistakes) {
+        isTeachingMsg = false; // explicitly an English session with grammar mistakes array
+    } else {
+        // Fallback: use global mode if we can't tell (e.g. perfect messages)
+        isTeachingMsg = isTeaching;
+    }
+
+    if (isTeachingMsg) {
+      if (clickedMsg.sender === 'meemo') {
+        // Clicked an AI teaching message - show its teaching data in panel
+        const teachingCard = {
+          id: `click-teach-${messageId}`,
+          isVocabulary: true,
+          targetLanguage: fallbackTargetLang,
+          usage: clickedMsg.usage || '',
+          formalForm: clickedMsg.formalForm || '',
+          informalForm: clickedMsg.informalForm || '',
+          alternatives: clickedMsg.alternatives || '',
+          culturalNote: clickedMsg.culturalNote || '',
+          targetLangCorrection: clickedMsg.targetLangCorrection || null,
+          vocabulary: (clickedMsg.vocabulary || []).map((v, i) => ({
+            id: `click-${i}`,
+            word: v.word,
+            romanization: v.romanization,
+            meaning: v.meaning
+          }))
+        };
+        setCorrections([teachingCard]);
+      } else if (clickedMsg.sender === 'user') {
+        // Find the AI response right after this user message to get the full teaching data
         const msgIndex = messages.indexOf(clickedMsg);
         const nextMsg = msgIndex >= 0 && msgIndex < messages.length - 1 ? messages[msgIndex + 1] : null;
+        
+        let teachingCard = null;
         if (nextMsg && nextMsg.sender === 'meemo' && nextMsg.isTeachingMode) {
-          const teachingCard = {
-            id: `click-teach-${nextMsg.id}`,
-            isVocabulary: true,
-            targetLanguage: targetLangName || '',
-            usage: nextMsg.usage || '',
-            formalForm: nextMsg.formalForm || '',
-            informalForm: nextMsg.informalForm || '',
-            alternatives: nextMsg.alternatives || '',
-            culturalNote: nextMsg.culturalNote || '',
-            targetLangCorrection: nextMsg.targetLangCorrection || null,
-            vocabulary: (nextMsg.vocabulary || []).map((v, i) => ({
-              id: `click-${i}`,
-              word: v.word,
-              romanization: v.romanization,
-              meaning: v.meaning
-            }))
-          };
-          setCorrections([teachingCard]);
+            // Use the full AI teaching card which contains the complete explanations and usage tips
+            teachingCard = {
+                id: `click-err-teach-${nextMsg.id}`,
+                isVocabulary: true,
+                targetLanguage: fallbackTargetLang,
+                usage: nextMsg.usage || '',
+                formalForm: nextMsg.formalForm || '',
+                informalForm: nextMsg.informalForm || '',
+                alternatives: nextMsg.alternatives || '',
+                culturalNote: nextMsg.culturalNote || '',
+                targetLangCorrection: nextMsg.targetLangCorrection || clickedMsg.targetLangCorrection,
+                vocabulary: (nextMsg.vocabulary || []).map((v, i) => ({
+                    id: `click-${i}`,
+                    word: v.word,
+                    romanization: v.romanization,
+                    meaning: v.meaning
+                }))
+            };
+        } else {
+            // Fallback if AI message isn't found
+            teachingCard = {
+              id: `click-err-${clickedMsg.id}`,
+              isVocabulary: true, 
+              targetLanguage: fallbackTargetLang,
+              usage: '',
+              formalForm: '',
+              informalForm: '',
+              alternatives: '',
+              culturalNote: '',
+              targetLangCorrection: clickedMsg.targetLangCorrection,
+              vocabulary: []
+            };
         }
-      } else if (clickedMsg.mistakes?.length > 0 && mode === 'chat_corrections') {
-        // English mode - show this message's grammar corrections
+        setCorrections([teachingCard]);
+      }
+      
+      // Auto-open panel on mobile when selecting a message with learning data
+      if (window.innerWidth < 1024 && corrections.length > 0) {
+        setIsCorrectionPanelOpen(true);
+      }
+      
+    } else {
+      // English mode: show grammar mistakes
+      if (clickedMsg.sender === 'user' && clickedMsg.mistakes?.length > 0) {
         const correction = {
-          id: `click-${messageId}`,
+          id: `history-${clickedMsg.id}`,
           original: clickedMsg.text,
           corrected: clickedMsg.corrected,
           mistakes: clickedMsg.mistakes.map((mistake, index) => ({
-            id: `click-${messageId}-${index}`,
-            original: mistake.originalFragment,
-            corrected: mistake.correctedFragment,
+            id: `${clickedMsg.id}-${index}`,
+            original: mistake.original || mistake.originalFragment,
+            corrected: mistake.corrected || mistake.correctedFragment,
             explanation: mistake.explanation
           }))
         };
         setCorrections([correction]);
+        
+        // Auto-open panel on mobile when selecting a message with errors
+        if (window.innerWidth < 1024) {
+          setIsCorrectionPanelOpen(true);
+        }
+      } else if (clickedMsg.sender === 'user' && (clickedMsg.mistakes?.length === 0 || clickedMsg.hadChanges === false)) {
+        // Show perfect message text for perfect messages
+        setCorrections([{
+          id: `perfect-${clickedMsg.id}`,
+          isPerfect: true,
+          explanation: "Perfect grammar! No corrections needed."
+        }]);
+      } else {
+        // If no specific grammar correction, clear the panel
+        setCorrections([]);
       }
     }
   };
@@ -1442,21 +1529,6 @@ function ChatPage() {
       )}
       
       <div className={`chat-container ${!isSidebarOpen ? 'sidebar-closed' : ''} ${isCorrectionPanelOpen ? 'panel-open' : ''}`}>
-        <button 
-          className="sidebar-toggle"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          aria-label="Toggle sidebar"
-        >
-          {isSidebarOpen ? '✕' : '💬'}
-        </button>
-        
-        <button 
-          className="correction-panel-toggle"
-          onClick={() => setIsCorrectionPanelOpen(!isCorrectionPanelOpen)}
-          aria-label="Toggle corrections"
-        >
-          {isCorrectionPanelOpen ? '✕' : '📖'}
-        </button>
 
         <ChatSidebar
           characters={CHARACTERS}
@@ -1483,6 +1555,8 @@ function ChatPage() {
           onToggleCorrections={handleToggleCorrections}
           onToggleGrammarTips={handleToggleGrammarTips}
           onSendMessage={handleSendMessage}
+          onOpenSidebar={() => setIsSidebarOpen(true)}
+          onOpenCorrectionPanel={() => setIsCorrectionPanelOpen(true)}
           onSTT={handleSTT}
           onTTS={handleTTS}
           isTTSEnabled={isTTSEnabled}
@@ -1496,6 +1570,7 @@ function ChatPage() {
           speakingMessageId={speakingMessageId}
           isMuted={isMuted}
           onToggleMute={toggleMute}
+          loadingMessages={loadingMessages}
         />
 
         <CorrectionPanel

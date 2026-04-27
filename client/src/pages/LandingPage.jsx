@@ -38,7 +38,7 @@ function LandingPage() {
             <button onClick={() => scrollToSection('about')} className="nav-link">About</button>
           </div>
           <div className="nav-actions">
-            <button onClick={() => navigate('/login')} className="btn-login">Log in</button>
+            <button onClick={() => navigate('/login')} className="btn-login">Login</button>
           </div>
         </div>
       </nav>
@@ -127,7 +127,7 @@ function LandingPage() {
             <span className="footer-divider">|</span>
             <a href="mailto:support@meemo.app" className="footer-link">Contact</a>
           </div>
-          <p className="footer-text">Â© 2026 Mee-Mo. All rights reserved.</p>
+          <p className="footer-text">© 2026 Mee-Mo. All rights reserved.</p>
         </div>
       </footer>
 

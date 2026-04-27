@@ -167,6 +167,9 @@ CONVERSATION CONTEXT:
 - Use the previous conversation history below to maintain context and remember what was discussed.
 - If the user previously told you their name, hobbies, interests etc., remember and reference them.
 
+CRITICAL LANGUAGE RULE:
+- Your output language is FIRMLY set to ${targetLanguage}. You MUST reply in ${targetLanguage} for this entire conversation turn, regardless of any other languages present in the history. Do not switch languages.
+
 You MUST respond ONLY with valid JSON in this exact format (no extra text):
 {
   "reply": "your conversational RESPONSE in ${targetLanguage} native script only (respond to what user said, don't just translate their words)",
@@ -240,6 +243,9 @@ CONVERSATION CONTEXT:
 - Pay close attention to the conversation history below. Reference things discussed earlier when relevant.
 - If the user told you their name, interests, or any personal detail, remember it.
 - Maintain continuity — don't ask questions that were already answered.
+
+CRITICAL LANGUAGE RULE:
+- Even if the conversation history contains other languages (e.g. from previous sessions), you MUST reply in ENGLISH starting now. Your output language is firmly set to English.
 
 You MUST respond ONLY with valid JSON in this exact format (no extra text):
 {

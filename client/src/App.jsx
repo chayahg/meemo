@@ -54,7 +54,7 @@ function AppRoutes() {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/login');
+    navigate('/');
   };
 
   const toggleMobileMenu = () => {
@@ -247,15 +247,15 @@ function AppRoutes() {
         />
         <Route 
           path="/chat" 
-          element={user ? <ChatPage /> : <Navigate to="/login" />} 
+          element={user ? <ChatPage /> : <Navigate to="/" />} 
         />
         <Route 
           path="/learn" 
-          element={user ? <LearnPage /> : <Navigate to="/login" />} 
+          element={user ? <LearnPage /> : <Navigate to="/" />} 
         />
         <Route 
           path="/settings" 
-          element={user ? <SettingsPage /> : <Navigate to="/login" />} 
+          element={user ? <SettingsPage /> : <Navigate to="/" />} 
         />
       </Routes>
     </>

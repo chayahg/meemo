@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import MessageBubble from './MessageBubble';
+import TypingIndicator from './TypingIndicator';
 
 function ChatWindow({
   character,
@@ -11,6 +12,8 @@ function ChatWindow({
   onToggleCorrections,
   onToggleGrammarTips,
   onSendMessage,
+  onOpenSidebar,
+  onOpenCorrectionPanel,
   onSTT,
   onTTS,
   isTTSEnabled,
@@ -23,7 +26,8 @@ function ChatWindow({
   onPlayMessageTTS,
   speakingMessageId,
   isMuted,
-  onToggleMute
+  onToggleMute,
+  loadingMessages
 }) {
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef(null);
@@ -34,7 +38,7 @@ function ChatWindow({
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, loadingMessages]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,35 +65,53 @@ function ChatWindow({
   return (
     <div className="chat-window" style={{ '--accent-color': character.accentColor }}>
       <div className="chat-header">
-        <div className="character-info">
-          <img 
-            src={character.avatar} 
-            alt={character.name}
-            className="character-avatar-small"
-            onError={(e) => {
-              e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="40" fill="%238b5cf6"/%3E%3C/svg%3E';
-            }}
-          />
-          <div>
-            <h2>{character.name}</h2>
-            <p className="character-role">{character.role}</p>
+        <button 
+          className="mobile-header-btn sidebar-toggle-btn"
+          onClick={onOpenSidebar}
+          aria-label="Chats"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        </button>
+
+        <div className="chat-header-center">
+          <div className="character-info">
+            <img 
+              src={character.avatar} 
+              alt={character.name}
+              className="character-avatar-small"
+              onError={(e) => {
+                e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="40" fill="%238b5cf6"/%3E%3C/svg%3E';
+              }}
+            />
+            <div>
+              <h2>{character.name}</h2>
+              <p className="character-role">{character.role}</p>
+            </div>
+          </div>
+
+          <div className="chat-mode-toggle">
+            <button
+              className={`toggle-option ${!showCorrections ? 'active' : ''}`}
+              onClick={() => onToggleCorrections(false)}
+            >
+              Chat only
+            </button>
+            <button
+              className={`toggle-option ${showCorrections ? 'active' : ''}`}
+              onClick={() => onToggleCorrections(true)}
+            >
+              Chat + corrections
+            </button>
           </div>
         </div>
 
-        <div className="chat-mode-toggle">
-          <button
-            className={`toggle-option ${!showCorrections ? 'active' : ''}`}
-            onClick={() => onToggleCorrections(false)}
-          >
-            Chat only
-          </button>
-          <button
-            className={`toggle-option ${showCorrections ? 'active' : ''}`}
-            onClick={() => onToggleCorrections(true)}
-          >
-            Chat + corrections
-          </button>
-        </div>
+        <button 
+          className="mobile-header-btn correction-toggle-btn"
+          onClick={onOpenCorrectionPanel}
+          aria-label="Corrections"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>
+        </button>
       </div>
 
       <div className="character-selector">
@@ -118,6 +140,7 @@ function ChatWindow({
             isSpeaking={speakingMessageId === message.id}
           />
         ))}
+        {loadingMessages && <TypingIndicator characterAvatar={character.avatar} />}
         <div ref={messagesEndRef} />
       </div>
 

@@ -4,6 +4,7 @@ import { useUser } from '../contexts/UserContext';
 import { useToast } from '../contexts/ToastContext';
 import { LANGUAGES, getLanguageByCode } from '../config/languageConfig';
 import './SettingsPage.css';
+import './SettingsPageStats.css';
 
 function SettingsPage() {
   const { user, loading, updateUserData, logout, switchLanguage } = useUser();
@@ -13,6 +14,7 @@ function SettingsPage() {
   const [formData, setFormData] = useState(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [switchingLanguage, setSwitchingLanguage] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
 
@@ -30,7 +32,7 @@ function SettingsPage() {
   const prevCharacter = () => setSliderIndex((prev) => (prev - 1 + characters.length) % characters.length);
 
   useEffect(() => {
-    if (!loading && !user) navigate('/login');
+    if (!loading && !user) navigate('/');
   }, [user, loading, navigate]);
 
   useEffect(() => {
@@ -117,15 +119,20 @@ function SettingsPage() {
   };
 
   const handleLogout = async () => {
-    showConfirm('Log out of Mee-Mo?', async () => {
-      try {
-        await logout();
-        navigate('/login');
-      } catch (error) {
-        console.error('Error logging out:', error);
-        showToast('Failed to log out. Please try again.', 'error');
-      }
-    });
+    if (isLoggingOut) return;
+
+    setIsLoggingOut(true);
+    try {
+      await logout();
+      navigate('/', { replace: true });
+      // Hard fallback so users never need a second action if router state lags.
+      window.location.replace('/');
+    } catch (error) {
+      console.error('Error logging out:', error);
+      showToast('Failed to log out. Please try again.', 'error');
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   const handleLanguageChange = async (newLanguageCode) => {
@@ -181,12 +188,12 @@ function SettingsPage() {
         </div>
 
         {/* ── Tab Navigation ── */}
-        <nav className="sp-tabs">
+                <nav className="sp-tabs">
           {[
-            { id: 'profile', label: 'Profile', icon: '👤' },
-            { id: 'preferences', label: 'Preferences', icon: '⚙️' },
-            { id: 'account', label: 'Account', icon: '🔒' },
-          ].map(tab => (
+            { id: 'profile', label: 'Profile', icon: 'P' },
+            { id: 'preferences', label: 'Preferences', icon: 'S' },
+            { id: 'account', label: 'Account', icon: 'A' },
+          ].map((tab) => (
             <button
               key={tab.id}
               className={`sp-tab ${activeTab === tab.id ? 'active' : ''}`}
@@ -221,6 +228,45 @@ function SettingsPage() {
                   <div className="sp-profile-badges">
                     <span className="sp-badge">{currentLang.flag} {currentLang.name}</span>
                     <span className="sp-badge">{currentChar?.name || 'No character'}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Progress & Stats Tracker */}
+            <section className="sp-card sp-stats-card">
+              <div className="sp-card-head">
+                <h3 className="sp-card-title">Learning Progress</h3>
+                <p className="sp-card-desc">Track your interactions and daily streaks</p>
+              </div>
+              <div className="sp-stats-grid">
+                <div className="sp-stat-item">
+                  <div className="sp-stat-icon level">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  </div>
+                  <div className="sp-stat-info">
+                    <span className="sp-stat-value">Level {formData.stats?.level || 1}</span>
+                    <span className="sp-stat-label">{formData.stats?.xp || 0} XP</span>
+                  </div>
+                </div>
+
+                <div className="sp-stat-item">
+                  <div className="sp-stat-icon streak">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"></path></svg>
+                  </div>
+                  <div className="sp-stat-info">
+                    <span className="sp-stat-value">{formData.stats?.dailyStreak || 0}</span>
+                    <span className="sp-stat-label">Day Streak</span>
+                  </div>
+                </div>
+
+                <div className="sp-stat-item">
+                  <div className="sp-stat-icon messages">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                  </div>
+                  <div className="sp-stat-info">
+                    <span className="sp-stat-value">{formData.stats?.correctMessages || 0}</span>
+                    <span className="sp-stat-label">Perfect Messages</span>
                   </div>
                 </div>
               </div>
@@ -291,7 +337,7 @@ function SettingsPage() {
                 <p className="sp-card-desc">Choose who you'd like to learn with</p>
               </div>
               <div className="sp-char-picker">
-                <button className="sp-char-arrow" onClick={prevCharacter} type="button">‹</button>
+                <button className="sp-char-arrow" onClick={prevCharacter} type="button">&lt;</button>
                 <div
                   className={`sp-char-card ${formData.profile.preferredCharacter === characters[sliderIndex].id ? 'active' : ''}`}
                   onClick={() => handleCharacterSelect(characters[sliderIndex].id)}
@@ -305,7 +351,7 @@ function SettingsPage() {
                     <span className="sp-char-active-tag">Active</span>
                   )}
                 </div>
-                <button className="sp-char-arrow" onClick={nextCharacter} type="button">›</button>
+                <button className="sp-char-arrow" onClick={nextCharacter} type="button">&gt;</button>
               </div>
               <div className="sp-char-dots">
                 {characters.map((char, i) => (
@@ -338,7 +384,7 @@ function SettingsPage() {
                   >
                     <span className="sp-lang-opt-flag">{lang.flag}</span>
                     <span className="sp-lang-opt-name">{lang.name}</span>
-                    {formData.profile.targetLanguage === lang.code && <span className="sp-lang-check">✓</span>}
+                    {formData.profile.targetLanguage === lang.code && <span className="sp-lang-check">OK</span>}
                   </button>
                 ))}
               </div>
@@ -510,11 +556,11 @@ function SettingsPage() {
 
             {/* Logout */}
             <section className="sp-card sp-logout-card">
-              <button className="sp-logout-btn" onClick={handleLogout}>
+              <button className="sp-logout-btn" onClick={handleLogout} disabled={isLoggingOut}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
                 </svg>
-                Log Out
+                {isLoggingOut ? 'Logging Out...' : 'Log Out'}
               </button>
             </section>
           </div>

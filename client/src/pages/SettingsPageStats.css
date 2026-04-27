@@ -1,0 +1,76 @@
+/* Progress & Stats Tracker Styles */
+.sp-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.sp-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--surface-light);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sp-stat-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.sp-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sp-stat-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.sp-stat-icon.level {
+  background-color: rgba(139, 92, 246, 0.1);
+  color: var(--primary-color);
+}
+
+.sp-stat-icon.streak {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.sp-stat-icon.messages {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.sp-stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sp-stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.sp-stat-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+[data-theme='dark'] .sp-stat-item {
+  background-color: var(--bg-color);
+}

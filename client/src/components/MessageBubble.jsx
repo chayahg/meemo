@@ -21,15 +21,7 @@ function MessageBubble({ message, showCorrections, accentColor, isSelected, onSe
         onClick={handleBubbleClick}
       >
         <div className="message-content" style={isUser ? { '--user-accent': accentColor } : {}}>
-          {/* === English mode: grammar correction on user message === */}
-          {hasCorrection && showCorrections ? (
-            <div className="message-with-correction">
-              <p>{message.text}</p>
-              <div className="corrected-text">
-                <span>✅ {message.corrected}</span>
-              </div>
-            </div>
-          ) : isUser && (hasEnglishCorrection || hasTargetLangCorrection) ? (
+          {isUser && (hasEnglishCorrection || hasTargetLangCorrection) ? (
             /* === Teaching mode: inline corrections on user message === */
             <div className="message-with-inline-correction">
               <p>{message.text}</p>
@@ -43,6 +35,14 @@ function MessageBubble({ message, showCorrections, accentColor, isSelected, onSe
                   <span className="correction-right">✅ {message.targetLangCorrection.corrected}</span>
                 </div>
               )}
+            </div>
+          ) : hasCorrection && showCorrections ? (
+            /* === English mode: grammar correction on user message === */
+            <div className="message-with-correction">
+              <p>{message.text}</p>
+              <div className="corrected-text">
+                <span>✅ {message.corrected}</span>
+              </div>
             </div>
           ) : isTeachingBubble ? (
             /* === Teaching mode: AI response with native + romanization + meaning === */

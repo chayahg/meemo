@@ -78,7 +78,7 @@
 
 /* During snap animation — optional subtle motion indication */
 .co__char--moving {
-  /* transition is already set, this class reserved for extras */
+  will-change: transform;
 }
 
 /* ================================================
@@ -171,7 +171,7 @@
 .co__overlay {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 1200;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,6 +1,15 @@
 function CorrectionPanel({ corrections, showCorrections, showGrammarTips, isOpen, targetLanguage }) {
-  const isTeachingMode = targetLanguage && targetLanguage !== 'English';
-  const panelTitle = isTeachingMode ? `${targetLanguage} Learning` : 'Corrections & tips';
+  // Determine mode dynamically from the data, not just the global language setting
+  // This allows viewing an English correction while the app is in Korean mode, and vice versa.
+  const isTeachingModeData = corrections.length > 0 && corrections[0].isVocabulary;
+  const isTeachingModeGlobal = targetLanguage && targetLanguage !== 'English';
+  
+  // Use the global setting for the empty state, but the data's setting when showing a card
+  const isTeachingMode = corrections.length > 0 ? isTeachingModeData : isTeachingModeGlobal;
+  
+  // Get language name from the card if available, otherwise global
+  const cardLang = isTeachingModeData && corrections[0].targetLanguage ? corrections[0].targetLanguage : targetLanguage;
+  const panelTitle = isTeachingMode ? `${cardLang} Learning` : 'Corrections & tips';
 
   if (!showCorrections) {
     return (
@@ -14,7 +23,7 @@ function CorrectionPanel({ corrections, showCorrections, showGrammarTips, isOpen
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
-            <p>{isTeachingMode ? 'Learning panel is hidden.' : 'Grammar tips are hidden.'}</p>
+            <p>{isTeachingModeGlobal ? 'Learning panel is hidden.' : 'Grammar tips are hidden.'}</p>
             <p className="small">Turn on "Chat + corrections" to see them.</p>
           </div>
         </div>
@@ -31,9 +40,6 @@ function CorrectionPanel({ corrections, showCorrections, showGrammarTips, isOpen
     <div className={`correction-panel ${isOpen ? 'open' : ''}`}>
       <div className="panel-header">
         <h3>{panelTitle}</h3>
-        {!isTeachingMode && grammarCorrections.length > 0 && (
-          <span className="correction-count">{grammarCorrections.length}</span>
-        )}
       </div>
       <div className="panel-content">
         {/* ===== TEACHING MODE: Single current card only ===== */}
@@ -135,10 +141,10 @@ function CorrectionPanel({ corrections, showCorrections, showGrammarTips, isOpen
           <>
             {perfectMessage && (
               <div className="perfect-message">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: 'var(--success)' }}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: 'var(--correction-right)' }}>
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <p style={{ color: 'var(--success)', fontWeight: '500' }}>{perfectMessage.explanation}</p>
+                <p style={{ color: 'var(--correction-right)', fontWeight: '500' }}>{perfectMessage.explanation}</p>
               </div>
             )}
             
